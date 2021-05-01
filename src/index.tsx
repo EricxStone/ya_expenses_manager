@@ -9,11 +9,13 @@
  */
 
 import React, { Component } from 'react';
-import Navigator from '_navigations';
 import { Provider } from 'react-redux';
-import { createStore } from 'redux';
-import reducer from '_store/index';
+import {store} from "./store/store"
 import {Category} from '_models'
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import HomeScreen from '_scenes/home';
+import DetailScreen from '_scenes/detail';
 
 declare const global: {HermesInternal: null | {}};
 
@@ -22,32 +24,37 @@ enum CategoryType{
     Expense
 }
 
-const store = createStore(reducer)
-
 /***
  * Show default category if not found from storage
  */
-let foodCategory: Category = new Category("nutrition", "Food", CategoryType.Expense)
-let transportCategory: Category = new Category("train", "Transportation", CategoryType.Expense)
-let salaryCategory: Category = new Category("paper", "Salary", CategoryType.Income)
-store.dispatch({
-    type: 'ADD_CATEGORY', 
-    payload: foodCategory
-})
-store.dispatch({
-    type: 'ADD_CATEGORY', 
-    payload: transportCategory
-})
-store.dispatch({
-    type: 'ADD_CATEGORY', 
-    payload: salaryCategory
-})
+// let foodCategory: Category = new Category("person", "Food", CategoryType.Expense)
+// let transportCategory: Category = new Category("person", "Transportation", CategoryType.Expense)
+// let salaryCategory: Category = new Category("person", "Salary", CategoryType.Income)
+// store.dispatch({
+//     type: 'ADD_CATEGORY', 
+//     payload: foodCategory
+// })
+// store.dispatch({
+//     type: 'ADD_CATEGORY', 
+//     payload: transportCategory
+// })
+// store.dispatch({
+//     type: 'ADD_CATEGORY', 
+//     payload: salaryCategory
+// })
+
+const Stack = createStackNavigator();
 
 export default class App extends React.Component {
     render() {
         return (
             <Provider store={store}>
-                <Navigator />
+                <NavigationContainer>
+                    <Stack.Navigator initialRouteName="Home" headerMode="none">
+                        <Stack.Screen name="Home" component={HomeScreen} />
+                        <Stack.Screen name="Detail" component={DetailScreen} />
+                    </Stack.Navigator>
+                </NavigationContainer>
             </Provider>
         )
     }
