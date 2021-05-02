@@ -16,8 +16,19 @@ import {
 } from 'native-base'
 import { useSelector } from 'react-redux';
 import {RootState} from '../../store/store';
+import {StackNavigationProp} from '@react-navigation/stack'
+import {RootStackParamList} from '../../index'
 
-const HomeScreen = () => {
+type HomeScreenNavigationProp = StackNavigationProp<
+    RootStackParamList,
+    'Home'
+>;
+
+export interface Props{
+    navigation: HomeScreenNavigationProp;
+}
+
+const HomeScreen = ({navigation}: Props) => {
     //let foodCategory: Category = new Category("nutrition", "Food", CategoryType.Expense)
     //let transportCategory: Category = new Category("train", "Transportation", CategoryType.Expense)
     //let salaryCategory: Category = new Category("person", "Salary", CategoryType.Income)
@@ -25,6 +36,11 @@ const HomeScreen = () => {
     const categories = [...categoryList];
     let incomeCategories: Category[] = categories.filter((item: Category) => item.categoryType == 0)
     let expenseCategories: Category[] = categories.filter((item: Category) => item.categoryType == 1)
+
+    const categoryItemClick = (categoryId: string, categoryName: string) => {
+        navigation.navigate("Detail", {categoryId, categoryName});
+    }
+
     return (
         <Container>
             <Header>

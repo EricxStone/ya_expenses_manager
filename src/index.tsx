@@ -43,6 +43,11 @@ enum CategoryType{
 //     payload: salaryCategory
 // })
 
+export type RootStackParamList = {
+    Home: undefined;
+    Detail: {categoryId: string, categoryName: string}
+}
+
 const Stack = createStackNavigator();
 
 export default class App extends React.Component {
