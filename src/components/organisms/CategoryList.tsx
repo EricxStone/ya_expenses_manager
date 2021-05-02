@@ -9,7 +9,7 @@ export interface Props{
 }
 
 const CategoryList: FunctionComponent<Props> = ({categories, listHeader}: Props) => {
-    const CategoryList: JSX.Element[] = categories.map((item: Category) => 
+    const categoryList: JSX.Element[] = categories.map((item: Category) => 
         <CategoryLine key={item.id} icon={item.icon} categoryName={item.categoryName} categoryType={item.categoryType} spending={item.spending} budget={item.budget} remaining={item.remaining}></CategoryLine>
     )
     return(
@@ -20,7 +20,7 @@ const CategoryList: FunctionComponent<Props> = ({categories, listHeader}: Props)
                         <Text>{listHeader}</Text>
                     </Left>
                 </ListItem>
-                {CategoryList}
+                {categoryList}
             </List>
         </React.Fragment>
     )

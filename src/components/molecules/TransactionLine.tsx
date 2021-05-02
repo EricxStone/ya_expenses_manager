@@ -6,10 +6,11 @@ export interface Props{
     item: string;
     amount: number;
     source: string;
-    transactionDate: string;
+    transactionDate: number;
+    categoryId: string;
 }
 
-const TransactionLine: FunctionComponent<Props> = ({item, amount, source, transactionDate}: Props) => {
+const TransactionLine: FunctionComponent<Props> = ({item, amount, source, transactionDate, categoryId}: Props) => {
     return (
         <ListItem noIndent>
             <Left>
