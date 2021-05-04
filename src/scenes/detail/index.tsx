@@ -6,6 +6,7 @@
 
  import React from 'react';
  import {Transaction} from '_models'
+ import {Category} from '_models'
  import {TransactionList} from '_organisms'
  import {
      Container,
@@ -13,37 +14,47 @@
      Title, 
      Content,
      Body,
+     Text,
  } from 'native-base'
  import { useSelector } from 'react-redux';
  import {RootState} from '../../store/store';
- import {StackNavigationProp} from '@react-navigation/stack'
+ import { RouteProp } from '@react-navigation/native';
  import {RootStackParamList} from '../../index'
-import { Transition } from 'react-native-reanimated';
 
-type DetailScreenNavigationProp = StackNavigationProp<
+type DetailScreenRouteProp = RouteProp<
     RootStackParamList,
     'Detail'
 >;
 
 export interface Props{
-    navigation: DetailScreenNavigationProp;
-    categoryId: string;
-    categoryName: string;
+    route: DetailScreenRouteProp
+}
+
+enum CategoryType{
+    Income,
+    Expense
 }
  
- const DetailScreen = ({navigation, categoryId, categoryName}: Props) => {
+ const DetailScreen = ({route}: Props) => {
+    const category = route.params.category;
     const {transactionList} = useSelector((state: RootState) => state.transactions);
-    let transactions = [...transactionList];
-    transactions = transactions.filter((transaction:Transaction) => transaction.categoryId == categoryId);
+    let transactions: Transaction[] = [...transactionList];
+    transactions = transactions.filter((transaction:Transaction) => transaction.categoryId == category.id);
+    let transactionListComp: JSX.Element;
+    if (transactions.length > 0){
+        transactionListComp = <TransactionList transactions={transactions}></TransactionList>
+    } else{
+        transactionListComp = <Text>No Transactions</Text>
+    }
     return (
         <Container>
             <Header>
                 <Body>
-                    <Title>Expense Manager</Title>
+                    <Title>{category.categoryType == 0 ? "Income" : "Expense"} - {category.categoryName}</Title>
                 </Body>
             </Header>
                 <Content>
-                    <TransactionList transactions={transactions} categoryId={categoryId} categoryName={categoryName}></TransactionList>
+                    {transactionListComp}
                 </Content>
         </Container>
     )

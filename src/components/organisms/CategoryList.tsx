@@ -6,15 +6,12 @@ import {Category} from '_models'
 export interface Props{
     categories: Category[];
     listHeader: string;
-    onCategoryClick: (categoryId: string, categoryName: string) => void;
+    onCategoryClick: (category: Category) => void;
 }
 
 const CategoryList: FunctionComponent<Props> = ({categories, listHeader, onCategoryClick}: Props) => {
     const categoryList: JSX.Element[] = categories.map((item: Category) => {
-        const onItemClick = () => {
-            onCategoryClick(item.id, item.categoryName);
-        }
-        return <CategoryLine key={item.id} icon={item.icon} categoryName={item.categoryName} categoryType={item.categoryType} spending={item.spending} budget={item.budget} remaining={item.remaining} onclick={onItemClick}></CategoryLine>
+        return <CategoryLine key={item.id} category={item} onCategoryClick={onCategoryClick}></CategoryLine>
     })
     return(
         <React.Fragment>

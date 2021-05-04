@@ -1,29 +1,26 @@
 import React, { FunctionComponent } from 'react'
+import {Transaction} from '_models'
 
 import {ListItem, Left, Right, Text} from 'native-base'
 
 export interface Props{
-    item: string;
-    amount: number;
-    source: string;
-    transactionDate: number;
-    categoryId: string;
+    transaction: Transaction;
 }
 
-const TransactionLine: FunctionComponent<Props> = ({item, amount, source, transactionDate, categoryId}: Props) => {
+const TransactionLine: FunctionComponent<Props> = ({transaction}: Props) => {
     return (
         <ListItem noIndent>
             <Left>
-                <Text>{item}</Text>
+                <Text>{transaction.item}</Text>
             </Left>
             <Right>
-                <Text>${amount}</Text>
+                <Text>${transaction.amount}</Text>
             </Right>
             <Left>
-                <Text>${source}</Text>
+                <Text>${transaction.source}</Text>
             </Left>
             <Right>
-                <Text>{transactionDate}</Text>
+                <Text>{transaction.transactionDate}</Text>
             </Right>
         </ListItem>
     )

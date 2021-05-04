@@ -27,13 +27,13 @@ enum CategoryType{
 /***
  * Show default category if not found from storage
  */
-// let foodCategory: Category = new Category("person", "Food", CategoryType.Expense)
+ let foodCategory: Category = new Category("person", "Food", CategoryType.Expense)
 // let transportCategory: Category = new Category("person", "Transportation", CategoryType.Expense)
 // let salaryCategory: Category = new Category("person", "Salary", CategoryType.Income)
-// store.dispatch({
-//     type: 'ADD_CATEGORY', 
-//     payload: foodCategory
-// })
+store.dispatch({
+    type: 'ADD_CATEGORY', 
+    payload: foodCategory
+})
 // store.dispatch({
 //     type: 'ADD_CATEGORY', 
 //     payload: transportCategory
@@ -45,7 +45,7 @@ enum CategoryType{
 
 export type RootStackParamList = {
     Home: undefined;
-    Detail: {categoryId: string, categoryName: string}
+    Detail: {category: Category}
 }
 
 const Stack = createStackNavigator();

@@ -37,8 +37,8 @@ const HomeScreen = ({navigation}: Props) => {
     let incomeCategories: Category[] = categories.filter((item: Category) => item.categoryType == 0)
     let expenseCategories: Category[] = categories.filter((item: Category) => item.categoryType == 1)
 
-    const categoryItemClick = (categoryId: string, categoryName: string) => {
-        navigation.navigate("Detail", {categoryId, categoryName});
+    const categoryItemClick = (category: Category) => {
+        navigation.navigate("Detail", {category});
     }
 
     return (
@@ -49,8 +49,8 @@ const HomeScreen = ({navigation}: Props) => {
                 </Body>
             </Header>
                 <Content>
-                    <CategoryList categories={incomeCategories} listHeader="Total Income"></CategoryList>
-                    <CategoryList categories={expenseCategories} listHeader="Total Expenses"></CategoryList>
+                    <CategoryList categories={incomeCategories} listHeader="Total Income" onCategoryClick={categoryItemClick}></CategoryList>
+                    <CategoryList categories={expenseCategories} listHeader="Total Expenses" onCategoryClick={categoryItemClick}></CategoryList>
                 </Content>
         </Container>
     )

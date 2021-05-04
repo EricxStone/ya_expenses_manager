@@ -2,6 +2,7 @@ import React, {FunctionComponent} from 'react'
 
 import {ListItem, Left, Right, Icon, Body, Text} from 'native-base'
 import { Col, Row, Grid } from 'react-native-easy-grid'
+import {Category} from '_models'
 
 enum CategoryType{
     Income,
@@ -9,30 +10,33 @@ enum CategoryType{
 };
 
 export interface Props{
-    icon: string;
-    categoryName: string;
-    categoryType: CategoryType
-    spending: number;
-    budget: number;
-    remaining: number;
+    // catId: string;
+    // icon: string;
+    // categoryName: string;
+    // categoryType: CategoryType
+    // spending: number;
+    // budget: number;
+    // remaining: number;
+    category: Category;
+    onCategoryClick: (category: Category) => void;
 }
 
-const CategoryLine: FunctionComponent<Props> = ({icon, categoryName, categoryType, spending, budget, remaining}: Props) => {
+const CategoryLine: FunctionComponent<Props> = ({category, onCategoryClick}: Props) => {
     return (
-        <ListItem>
+        <ListItem button onPress={()=>onCategoryClick(category)} >
             <Grid>
                 <Col size={1}>
                     <Body>
-                        <Icon active name={icon} />
+                        <Icon active name={category.icon} />
                     </Body>
                 </Col>
                 <Col size={4}>
                     <Row>
                         <Left>
-                            <Text>{categoryName}</Text>
+                            <Text>{category.categoryName}</Text>
                         </Left>
                         <Right>
-                            <Text>{categoryType == CategoryType.Income? "Income" : "Expense"}</Text>
+                            <Text>{category.categoryType == CategoryType.Income? "Income" : "Expense"}</Text>
                         </Right>
                     </Row>
                     <Row>
@@ -42,7 +46,7 @@ const CategoryLine: FunctionComponent<Props> = ({icon, categoryName, categoryTyp
                                     <Text>Spending</Text>
                                 </Row>
                                 <Row>
-                                    <Text>{spending}</Text>
+                                    <Text>{category.spending}</Text>
                                 </Row>
                             </Col>
                             <Col>
@@ -50,7 +54,7 @@ const CategoryLine: FunctionComponent<Props> = ({icon, categoryName, categoryTyp
                                     <Text>Budget</Text>
                                 </Row>
                                 <Row>
-                                    <Text>{budget}</Text>
+                                    <Text>{category.budget}</Text>
                                 </Row>
                             </Col>
                             <Col>
@@ -58,7 +62,7 @@ const CategoryLine: FunctionComponent<Props> = ({icon, categoryName, categoryTyp
                                     <Text>Remain</Text>
                                 </Row>
                                 <Row>
-                                    <Text>{remaining}</Text>
+                                    <Text>{category.remaining}</Text>
                                 </Row>
                             </Col>
                         </Grid>
