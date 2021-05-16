@@ -3,7 +3,7 @@
  */
 
 import React, {FunctionComponent} from 'react'
-import { Container, Header, Content, Form, Item, Input, Label, Picker, Icon } from 'native-base';
+import { Container, Header, Content, Form, Item, Input, Label, Picker, Icon, Text } from 'native-base';
 import {Category} from '_models'
 
 interface Props{
@@ -12,32 +12,42 @@ interface Props{
 }
 
 const CategoryInputForm: FunctionComponent<Props> = ({category, onSubmitClick}) => {
-    const [selectedState, setSelectedState] = React.useState(1);
-    if (category === undefined)
+    
+    const [selectedState, setSelectedState] = React.useState("1");
+
+    const onTypeSelected = (e: React.FormEvent) => {
+        console.log(e);
+    }
+
+    if (category !== undefined){
+
+    }
     return(
         <React.Fragment>
             <Form>
-                <Item floatingLabel>
+                <Item stackedLabel>
                     <Label>Name</Label>
                     <Input />
                 </Item>
-                <Item picker>
+                <Item picker >
+                    <Label>Type</Label>
                     <Picker
                         mode="dropdown"
-                        iosIcon={<Icon name="arrow-down" />}
-                        style={{ width: undefined }}
-                        placeholder="Select your SIM"
-                        placeholderStyle={{ color: "#bfc6ea" }}
+                        iosIcon={<Icon name="chevron-down" />}
+                        style={{ height: 100 }}
+                        placeholder="Type"
+                        placeholderStyle={{ height: 50, color: "#bfc6ea" }}
                         placeholderIconColor="#007aff"
                         selectedValue={selectedState}
-                        onValueChange={this.onValueChange2.bind(this)}
+                        // onValueChange={onTypeSelected}
                     >
-                        <Picker.Item label="Wallet" value="key0" />
-                        <Picker.Item label="ATM Card" value="key1" />
-                        <Picker.Item label="Debit Card" value="key2" />
-                        <Picker.Item label="Credit Card" value="key3" />
-                        <Picker.Item label="Net Banking" value="key4" />
+                        <Picker.Item label="Expenses" value="1" />
+                        <Picker.Item label="Income" value="2" />
                     </Picker>
+                </Item>
+                <Item stackedLabel>
+                    <Label>Test</Label>
+                    <Input />
                 </Item>
           </Form>
         </React.Fragment>

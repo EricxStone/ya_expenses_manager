@@ -13,7 +13,9 @@ import {
     Title, 
     Content,
     Body,
+    View, Button, Fab
 } from 'native-base'
+import Icon from 'react-native-vector-icons/FontAwesome5';
 import { useSelector } from 'react-redux';
 import {RootState} from '../../store/store';
 import {StackNavigationProp} from '@react-navigation/stack'
@@ -52,6 +54,16 @@ const HomeScreen = ({navigation}: Props) => {
                     <CategoryList categories={incomeCategories} listHeader="Total Income" onCategoryClick={categoryItemClick}></CategoryList>
                     <CategoryList categories={expenseCategories} listHeader="Total Expenses" onCategoryClick={categoryItemClick}></CategoryList>
                 </Content>
+                <View style={{ flex: 1 }}>
+                    <Fab
+                        direction="up"
+                        containerStyle={{ }}
+                        style={{ backgroundColor: '#5067FF' }}
+                        position="bottomRight"
+                        onPress={() => navigation.navigate("InputCategory", {})}>
+                        <Icon name="plus" />
+                    </Fab>
+                </View>
         </Container>
     )
 }

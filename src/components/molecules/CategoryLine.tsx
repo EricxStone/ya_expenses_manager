@@ -1,6 +1,7 @@
 import React, {FunctionComponent} from 'react'
 
-import {ListItem, Left, Right, Icon, Body, Text} from 'native-base'
+import {ListItem, Left, Right, Body, Text} from 'native-base'
+import Icon from 'react-native-vector-icons/FontAwesome5';
 import { Col, Row, Grid } from 'react-native-easy-grid'
 import {Category} from '_models'
 
@@ -27,7 +28,7 @@ const CategoryLine: FunctionComponent<Props> = ({category, onCategoryClick}: Pro
             <Grid>
                 <Col size={1}>
                     <Body>
-                        <Icon active name={category.icon} />
+                        <Icon name={category.icon} />
                     </Body>
                 </Col>
                 <Col size={4}>

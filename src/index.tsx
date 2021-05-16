@@ -16,6 +16,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import HomeScreen from '_scenes/home';
 import DetailScreen from '_scenes/detail';
+import InputCategoryScreen from "_scenes/inputCategory";
 
 declare const global: {HermesInternal: null | {}};
 
@@ -27,7 +28,7 @@ enum CategoryType{
 /***
  * Show default category if not found from storage
  */
- let foodCategory: Category = new Category("person", "Food", CategoryType.Expense)
+ let foodCategory: Category = new Category("bone", "Food", CategoryType.Expense)
 // let transportCategory: Category = new Category("person", "Transportation", CategoryType.Expense)
 // let salaryCategory: Category = new Category("person", "Salary", CategoryType.Income)
 store.dispatch({
@@ -45,7 +46,8 @@ store.dispatch({
 
 export type RootStackParamList = {
     Home: undefined;
-    Detail: {category: Category}
+    Detail: {category: Category};
+    InputCategory: {category?: Category};
 }
 
 const Stack = createStackNavigator();
@@ -58,6 +60,7 @@ export default class App extends React.Component {
                     <Stack.Navigator initialRouteName="Home" headerMode="none">
                         <Stack.Screen name="Home" component={HomeScreen} />
                         <Stack.Screen name="Detail" component={DetailScreen} />
+                        <Stack.Screen name="InputCategory" component={InputCategoryScreen} />
                     </Stack.Navigator>
                 </NavigationContainer>
             </Provider>
