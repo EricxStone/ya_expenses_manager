@@ -20,11 +20,12 @@ export interface Props{
     // remaining: number;
     category: Category;
     onCategoryClick: (category: Category) => void;
+    onCategoryEdit: (category: Category) => void;
 }
 
-const CategoryLine: FunctionComponent<Props> = ({category, onCategoryClick}: Props) => {
+const CategoryLine: FunctionComponent<Props> = ({category, onCategoryClick, onCategoryEdit}: Props) => {
     return (
-        <ListItem button onPress={()=>onCategoryClick(category)} >
+        <ListItem button onPress={()=>onCategoryClick(category)} onLongPress={()=>onCategoryEdit(category)}>
             <Grid>
                 <Col size={1}>
                     <Body>

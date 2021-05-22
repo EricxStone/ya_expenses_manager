@@ -12,28 +12,57 @@ import {CategoryInputForm} from '_organisms'
      Content,
      Body,
      Text,
+     Fab,
+     View
  } from 'native-base'
- import { useSelector } from 'react-redux';
+ import {ScrollView} from 'react-native'
+ import Icon from 'react-native-vector-icons/FontAwesome5';
+ import { useDispatch } from 'react-redux';
  import {RootState} from '../../store/store';
- import { RouteProp } from '@react-navigation/native';
+ import { RouteProp, NavigationProp } from '@react-navigation/native';
  import {StackNavigationProp} from '@react-navigation/stack'
  import {RootStackParamList} from '../../index'
 
- type InputCategoryScreenNavigationProp = StackNavigationProp<
+ type InputCategoryScreenRouteProp = RouteProp<
+    RootStackParamList,
+    'InputCategory'
+>;
+
+type InputCategoryScreenNavigationProp = StackNavigationProp<
     RootStackParamList,
     'InputCategory'
 >;
 
 export interface Props{
+    route: InputCategoryScreenRouteProp;
     navigation: InputCategoryScreenNavigationProp;
 }
 
- const InputCategoryScreen = ({navigation}: Props) => {
+ const InputCategoryScreen = ({route, navigation}: Props) => {
+
+    const [categoryState, setCategoryState] = React.useState(route.params.category)
+    const dispatch = useDispatch()
 
     const onInputSubmit = () => {
-
+        navigation.goBack();
     }
 
+    const onInputChange = (category: Category) => {
+        setCategoryState(category)
+    }
+
+    React.useEffect(() => {
+        return () => {
+            if (route.params.category == undefined){
+                console.log("Add", categoryState);
+                dispatch({type: 'ADD_CATEGORY', payload: categoryState})
+            } else {
+                console.log("Edit", categoryState);
+                dispatch({type: 'EDIT_CATEGORY', payload: categoryState})
+            }
+        }
+    }, [])
+    
     return (
         <Container>
             <Header>
@@ -42,8 +71,20 @@ export interface Props{
                 </Body>
             </Header>
                 <Content>
-                    <CategoryInputForm onSubmitClick={onInputSubmit}></CategoryInputForm>
+                    <CategoryInputForm onInputChange={onInputChange} category={route.params.category}></CategoryInputForm>
                 </Content>
+                <ScrollView contentContainerStyle={{flexGrow: 1}}
+                    keyboardShouldPersistTaps='handled'
+                >
+                    <Fab
+                        direction="up"
+                        containerStyle={{ }}
+                        style={{ backgroundColor: '#5067FF' }}
+                        position="bottomRight"
+                        onPress={onInputSubmit}>
+                        <Icon name="check" />
+                    </Fab>
+                </ScrollView>
         </Container>
     )
  }
