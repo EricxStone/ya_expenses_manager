@@ -48,12 +48,14 @@ export interface Props{
     }
 
     const onInputChange = (category: Category) => {
+        console.log("Input changed", category);
         setCategoryState(category)
     }
 
     React.useEffect(() => {
         return () => {
-            if (route.params.category == undefined){
+            console.log("Category param", route.params.category);
+            if (route.params.category === undefined){
                 console.log("Add", categoryState);
                 dispatch({type: 'ADD_CATEGORY', payload: categoryState})
             } else {

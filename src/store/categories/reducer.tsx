@@ -5,7 +5,7 @@ const initialState: categoriesState = {
     categoryList: []
 }
 
-const categoriesReducer = (state = initialState, action: CategoryActionType) => {
+const categoriesReducer = (state = initialState, action: CategoryActionType): categoriesState => {
     switch (action.type){
         case ADD_CATEGORY:
             const {categoryList} = state
@@ -14,16 +14,17 @@ const categoriesReducer = (state = initialState, action: CategoryActionType) => 
             return addNewState
         
         case EDIT_CATEGORY:
-            const filteredCategories = state.categoryList.filter(
+            let filteredCategories = state.categoryList.filter(
                 cate => cate.id != action.payload.id
             )
-            const newState = filteredCategories.push(action.payload)
-            return newState
+            filteredCategories.push(action.payload);
+            return {categoryList: filteredCategories}
 
         case DELETE_CATEGORY:
-            return state.categoryList.filter(
+            const removedCategories = state.categoryList.filter(
                 cate => cate.id != action.payload
             )
+            return {categoryList: removedCategories}
 
         default:
             return state

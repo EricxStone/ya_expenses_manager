@@ -64,11 +64,11 @@ const CategoryInputForm: FunctionComponent<Props> = ({category, onInputChange}) 
                         placeholder="Type"
                         placeholderStyle={{ height: 50, color: "#bfc6ea" }}
                         placeholderIconColor="#007aff"
-                        selectedValue={categoryState.categoryType}
+                        selectedValue={categoryState.categoryType.toString()}
                         onValueChange={onTypeSelected}
                     >
                         <Picker.Item label="Expenses" value="1" />
-                        <Picker.Item label="Income" value="2" />
+                        <Picker.Item label="Income" value="0" />
                     </Picker>
                 </Item>
                 <Item stackedLabel>
