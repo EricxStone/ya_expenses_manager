@@ -16,7 +16,7 @@ import {
     View, Button, Fab
 } from 'native-base'
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import { useSelector } from 'react-redux';
+import { useSelector, shallowEqual } from 'react-redux';
 import {RootState} from '../../store/store';
 import {StackNavigationProp} from '@react-navigation/stack'
 import {RootStackParamList} from '../../index'
@@ -41,10 +41,10 @@ const HomeScreen = ({navigation}: Props) => {
     const [incomeCategoriesState, setIncomeCategoriesState] = React.useState(incomeCategories);
     const [expenseCategoriesState, setExpenseCategoriesState] = React.useState(expenseCategories);
 
-    const {categoryList} = useSelector((state: RootState) => state.categories);
-    
+    const categoryList = useSelector((state: RootState) => state.categories.categoryList);
 
     React.useEffect(() => {
+        console.log("Use select reload")
         const categories = [...categoryList];
         let incomeCategories = categories.filter((item: Category) => item.categoryType == 0)
         let expenseCategories = categories.filter((item: Category) => item.categoryType == 1)
@@ -55,7 +55,7 @@ const HomeScreen = ({navigation}: Props) => {
             setIncomeCategoriesState([])
             setExpenseCategoriesState([])
         }
-    }, [])
+    }, [categoryList])
 
     console.log("Re-render");
 

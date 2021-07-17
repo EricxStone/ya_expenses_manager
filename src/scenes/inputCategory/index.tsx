@@ -17,7 +17,7 @@ import {CategoryInputForm} from '_organisms'
  } from 'native-base'
  import {ScrollView} from 'react-native'
  import Icon from 'react-native-vector-icons/FontAwesome5';
- import { useDispatch } from 'react-redux';
+ import { useDispatch, useSelector } from 'react-redux';
  import {RootState} from '../../store/store';
  import { RouteProp, NavigationProp } from '@react-navigation/native';
  import {StackNavigationProp} from '@react-navigation/stack'
@@ -38,9 +38,15 @@ export interface Props{
     navigation: InputCategoryScreenNavigationProp;
 }
 
+enum CategoryType{
+    Income,
+    Expense
+}
+
  const InputCategoryScreen = ({route, navigation}: Props) => {
 
-    const [categoryState, setCategoryState] = React.useState(route.params.category)
+    const newCategory = route.params.category === undefined ? new Category("wallet", "", CategoryType.Expense) : route.params.category;
+    const [categoryState, setCategoryState] = React.useState(newCategory)
     const dispatch = useDispatch()
 
     const onInputSubmit = () => {
@@ -49,16 +55,21 @@ export interface Props{
 
     const onInputChange = (category: Category) => {
         console.log("Input changed", category);
-        setCategoryState(category)
+        setCategoryState(category);
+        setCategoryState((categoryState) => {
+            console.log("Updated State:", categoryState);
+            return categoryState;
+        });
     }
 
     React.useEffect(() => {
         return () => {
             console.log("Category param", route.params.category);
-            if (route.params.category === undefined){
+            console.log("Category state", categoryState);
+            if (route.params.category === undefined && categoryState !== undefined){
                 console.log("Add", categoryState);
                 dispatch({type: 'ADD_CATEGORY', payload: categoryState})
-            } else {
+            } else if (route.params.category !== undefined && categoryState !== undefined) {
                 console.log("Edit", categoryState);
                 dispatch({type: 'EDIT_CATEGORY', payload: categoryState})
             }
@@ -73,7 +84,7 @@ export interface Props{
                 </Body>
             </Header>
                 <Content>
-                    <CategoryInputForm onInputChange={onInputChange} category={route.params.category}></CategoryInputForm>
+                    <CategoryInputForm onInputChange={onInputChange} category={newCategory}></CategoryInputForm>
                 </Content>
                 <ScrollView contentContainerStyle={{flexGrow: 1}}
                     keyboardShouldPersistTaps='handled'

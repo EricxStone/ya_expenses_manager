@@ -7,7 +7,7 @@ import { Container, Header, Content, Form, Item, Input, Label, Picker, Icon, Tex
 import {Category} from '_models'
 
 interface Props{
-    category?: Category;
+    category: Category;
     onInputChange: (category: Category) => void;
 }
 
@@ -18,8 +18,8 @@ enum CategoryType{
 
 const CategoryInputForm: FunctionComponent<Props> = ({category, onInputChange}) => {
 
-    const newCategory = new Category("wallet", "", CategoryType.Expense)
-    const [categoryState, setCategoryState] = React.useState(newCategory);
+    // const newCategory = new Category("wallet", "", CategoryType.Expense)
+    const [categoryState, setCategoryState] = React.useState(category);
     
     React.useEffect(() => {
         if (category !== undefined) setCategoryState(category)
