@@ -1,34 +1,32 @@
-import React, {Component} from 'react'
-
-import {FlatList} from 'react-native'
-import {List, ListItem, Left, Right, Text} from 'native-base'
+import React, {FunctionComponent} from 'react'
+import {List, ListItem, Left, Right, Text, Button} from 'native-base'
+import Icon from 'react-native-vector-icons/FontAwesome5';
 import {CategoryLine} from '_molecules'
 import {Category} from '_models'
 
 export interface Props{
-    Categories: Category[],
-    listHeader: string,
+    categories: Category[];
+    listHeader: string;
+    onCategoryClick: (category: Category) => void;
+    onCategoryEdit: (category: Category) => void;
 }
 
-class CategoryList extends Component<Props>{
-    render(){
-        const {Categories, listHeader} = this.props
-        const CategoryList: JSX.Element[] = Categories.map((item: Category) => 
-            <CategoryLine key={item.id} icon={item.icon} categoryName={item.categoryName} categoryType={item.categoryType} spending={item.spending} budget={item.budget} remaining={item.remaining}></CategoryLine>
-        )
-        return(
-            <React.Fragment>
-                <List>
-                    <ListItem itemHeader first>
-                        <Left>
-                            <Text>{listHeader}</Text>
-                        </Left>
-                    </ListItem>
-                    {CategoryList}
-                </List>
-            </React.Fragment>
-        )
-    }
+const CategoryList: FunctionComponent<Props> = ({categories, listHeader, onCategoryClick, onCategoryEdit}: Props) => {
+    const categoryList: JSX.Element[] = categories.map((item: Category) => {
+        return <CategoryLine key={item.id} category={item} onCategoryClick={onCategoryClick} onCategoryEdit={onCategoryEdit}></CategoryLine>
+    })
+    return(
+        <React.Fragment>
+            <List>
+                <ListItem itemHeader first>
+                    <Left>
+                        <Text>{listHeader}</Text>
+                    </Left>
+                </ListItem>
+                {categoryList}
+            </List>
+        </React.Fragment>
+    )
 }
 
 export default CategoryList

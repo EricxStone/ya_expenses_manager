@@ -1,7 +1,9 @@
-import React, {Component} from 'react'
+import React, {FunctionComponent} from 'react'
 
-import {ListItem, Left, Right, Icon, Body, Text} from 'native-base'
+import {ListItem, Left, Right, Body, Text} from 'native-base'
+import Icon from 'react-native-vector-icons/FontAwesome5';
 import { Col, Row, Grid } from 'react-native-easy-grid'
+import {Category} from '_models'
 
 enum CategoryType{
     Income,
@@ -9,68 +11,68 @@ enum CategoryType{
 };
 
 export interface Props{
-    icon: string;
-    categoryName: string;
-    categoryType: CategoryType
-    spending: number;
-    budget: number;
-    remaining: number;
+    // catId: string;
+    // icon: string;
+    // categoryName: string;
+    // categoryType: CategoryType
+    // spending: number;
+    // budget: number;
+    // remaining: number;
+    category: Category;
+    onCategoryClick: (category: Category) => void;
+    onCategoryEdit: (category: Category) => void;
 }
 
-class CategoryLine extends Component<Props>{
-    render() {
-        const {icon, categoryName, categoryType, spending, budget, remaining} = this.props
-
-        return (
-            <ListItem>
-                <Grid>
-                    <Col size={1}>
-                        <Body>
-                            <Icon active name={icon} />
-                        </Body>
-                    </Col>
-                    <Col size={4}>
-                        <Row>
-                            <Left>
-                                <Text>{categoryName}</Text>
-                            </Left>
-                            <Right>
-                                <Text>{categoryType == CategoryType.Income? "Income" : "Expense"}</Text>
-                            </Right>
-                        </Row>
-                        <Row>
-                            <Grid>
-                                <Col>
-                                    <Row>
-                                        <Text>Spending</Text>
-                                    </Row>
-                                    <Row>
-                                        <Text>{spending}</Text>
-                                    </Row>
-                                </Col>
-                                <Col>
-                                    <Row>
-                                        <Text>Budget</Text>
-                                    </Row>
-                                    <Row>
-                                        <Text>{budget}</Text>
-                                    </Row>
-                                </Col>
-                                <Col>
-                                    <Row>
-                                        <Text>Remain</Text>
-                                    </Row>
-                                    <Row>
-                                        <Text>{remaining}</Text>
-                                    </Row>
-                                </Col>
-                            </Grid>
-                        </Row>
-                    </Col>
-                </Grid>
-            </ListItem>
-        )
-    }
+const CategoryLine: FunctionComponent<Props> = ({category, onCategoryClick, onCategoryEdit}: Props) => {
+    return (
+        <ListItem button onPress={()=>onCategoryClick(category)} onLongPress={()=>onCategoryEdit(category)}>
+            <Grid>
+                <Col size={1}>
+                    <Body>
+                        <Icon name={category.icon} />
+                    </Body>
+                </Col>
+                <Col size={4}>
+                    <Row>
+                        <Left>
+                            <Text>{category.categoryName}</Text>
+                        </Left>
+                        <Right>
+                            <Text>{category.categoryType == CategoryType.Income? "Income" : "Expense"}</Text>
+                        </Right>
+                    </Row>
+                    <Row>
+                        <Grid>
+                            <Col>
+                                <Row>
+                                    <Text>Spending</Text>
+                                </Row>
+                                <Row>
+                                    <Text>{category.spending}</Text>
+                                </Row>
+                            </Col>
+                            <Col>
+                                <Row>
+                                    <Text>Budget</Text>
+                                </Row>
+                                <Row>
+                                    <Text>{category.budget}</Text>
+                                </Row>
+                            </Col>
+                            <Col>
+                                <Row>
+                                    <Text>Remain</Text>
+                                </Row>
+                                <Row>
+                                    <Text>{category.remaining}</Text>
+                                </Row>
+                            </Col>
+                        </Grid>
+                    </Row>
+                </Col>
+            </Grid>
+        </ListItem>
+    )
 }
 
 export default CategoryLine

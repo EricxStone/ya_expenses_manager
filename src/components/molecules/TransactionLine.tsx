@@ -1,35 +1,29 @@
-import React, { Component } from 'react'
+import React, { FunctionComponent } from 'react'
+import {Transaction} from '_models'
 
 import {ListItem, Left, Right, Text} from 'native-base'
 
 export interface Props{
-    item: string;
-    amount: number;
-    source: string;
-    transactionDate: string;
+    transaction: Transaction;
 }
 
-class TransactionLine extends Component<Props> {
-    render() {
-        const {item, amount, source, transactionDate} = this.props;
-
-        return (
-            <ListItem noIndent>
-                <Left>
-                    <Text>{item}</Text>
-                </Left>
-                <Right>
-                    <Text>${amount}</Text>
-                </Right>
-                <Left>
-                    <Text>${source}</Text>
-                </Left>
-                <Right>
-                    <Text>{transactionDate}</Text>
-                </Right>
-            </ListItem>
-        )
-    }
+const TransactionLine: FunctionComponent<Props> = ({transaction}: Props) => {
+    return (
+        <ListItem noIndent>
+            <Left>
+                <Text>{transaction.item}</Text>
+            </Left>
+            <Right>
+                <Text>${transaction.amount}</Text>
+            </Right>
+            <Left>
+                <Text>${transaction.source}</Text>
+            </Left>
+            <Right>
+                <Text>{transaction.transactionDate}</Text>
+            </Right>
+        </ListItem>
+    )
 }
 
 export default TransactionLine
