@@ -21,9 +21,8 @@ const categoriesReducer = (state: categoriesState = initialState, action: Catego
                 )
                 filteredCategories.push(action.payload);
                 return {categoryList: filteredCategories}
-            } else {
-                return state
-            }
+            } 
+            return state
 
         case DELETE_CATEGORY:
             if (action.payload !== undefined){
@@ -31,9 +30,8 @@ const categoriesReducer = (state: categoriesState = initialState, action: Catego
                     (cate: Category) => cate.id != action.payload
                 )
                 return {categoryList: removedCategories}
-            } else {
-                return state
-            }
+            } 
+            return state
 
         default:
             return state
