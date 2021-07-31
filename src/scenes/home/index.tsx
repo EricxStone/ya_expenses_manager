@@ -13,10 +13,10 @@ import {
     Title, 
     Content,
     Body,
-    View, Button, Fab
+    View, Fab
 } from 'native-base'
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import { useSelector, shallowEqual } from 'react-redux';
+import { useSelector } from 'react-redux';
 import {RootState} from '../../store/store';
 import {StackNavigationProp} from '@react-navigation/stack'
 import {RootStackParamList} from '../../index'
