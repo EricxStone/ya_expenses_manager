@@ -55,12 +55,12 @@ const CategoryInputForm: FunctionComponent<Props> = ({category, onInputChange}) 
                     <Label>Name</Label>
                     <Input onEndEditing={onNameInput} defaultValue={categoryState.categoryName} />
                 </Item>
-                <Item picker >
+                <Item stackedLabel >
                     <Label>Type</Label>
                     <Picker
                         mode="dropdown"
                         iosIcon={<Icon name="chevron-down" />}
-                        style={{ height: 100 }}
+                        style={{ height: 50, width: "90%" }}
                         placeholder="Type"
                         placeholderStyle={{ height: 50, color: "#bfc6ea" }}
                         placeholderIconColor="#007aff"

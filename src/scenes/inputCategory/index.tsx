@@ -13,9 +13,10 @@ import {CategoryInputForm} from '_organisms'
      Body,
      Text,
      Fab,
-     View
+     View,
+     Grid,
+     Row,
  } from 'native-base'
- import {ScrollView} from 'react-native'
  import Icon from 'react-native-vector-icons/FontAwesome5';
  import { useDispatch, useSelector } from 'react-redux';
  import {RootState} from '../../store/store';
@@ -83,21 +84,25 @@ enum CategoryType{
                     <Title>Add a Category</Title>
                 </Body>
             </Header>
-                <Content>
-                    <CategoryInputForm onInputChange={onInputChange} category={newCategory}></CategoryInputForm>
-                </Content>
-                <ScrollView contentContainerStyle={{flexGrow: 1}}
-                    keyboardShouldPersistTaps='handled'
-                >
-                    <Fab
-                        direction="up"
-                        containerStyle={{ }}
-                        style={{ backgroundColor: '#5067FF' }}
-                        position="bottomRight"
-                        onPress={onInputSubmit}>
-                        <Icon name="check" />
-                    </Fab>
-                </ScrollView>
+            <Grid>
+                <Row style={{height: "100%"}}>
+                    <Content>
+                        <CategoryInputForm onInputChange={onInputChange} category={newCategory}></CategoryInputForm>
+                    </Content>
+                </Row>
+                <Row>
+                    <View style={{ flex: 1 }}>
+                        <Fab
+                            direction="up"
+                            containerStyle={{ }}
+                            style={{ backgroundColor: '#5067FF' }}
+                            position="bottomRight"
+                            onPress={onInputSubmit}>
+                            <Icon name="check" />
+                        </Fab>
+                    </View>
+                </Row>
+            </Grid>
         </Container>
     )
  }
