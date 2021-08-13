@@ -1,7 +1,8 @@
 import React, { FunctionComponent } from 'react'
 import {Transaction} from '_models'
+import { DateTime } from 'luxon'
 
-import {ListItem, Left, Right, Text} from 'native-base'
+import {ListItem, Left, Right, Text, Grid, Row, Col, View, List} from 'native-base'
 
 export interface Props{
     transaction: Transaction;
@@ -9,19 +10,33 @@ export interface Props{
 
 const TransactionLine: FunctionComponent<Props> = ({transaction}: Props) => {
     return (
-        <ListItem noIndent>
-            <Left>
-                <Text>{transaction.item}</Text>
-            </Left>
-            <Right>
-                <Text>${transaction.amount}</Text>
-            </Right>
-            <Left>
-                <Text>${transaction.source}</Text>
-            </Left>
-            <Right>
-                <Text>{transaction.transactionDate}</Text>
-            </Right>
+        <ListItem button >
+            <Grid>
+                <Row>
+                    <Col size={3}>
+                        <Left>
+                            <Text>{transaction.item}</Text>
+                        </Left>
+                    </Col>
+                    <Col size={1}>
+                        <Right>
+                            <Text>${transaction.amount}</Text>
+                        </Right>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col size={2}>
+                        <Left>
+                            <Text>{transaction.source}</Text>
+                        </Left>
+                    </Col>
+                    <Col size={1}>
+                        <Right> 
+                            <Text>${DateTime.fromMillis(transaction.transactionDate).setLocale('hk').toFormat("yyyy-MM-dd")}</Text>
+                        </Right>
+                    </Col>
+                </Row>
+            </Grid>
         </ListItem>
     )
 }

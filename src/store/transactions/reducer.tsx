@@ -9,6 +9,8 @@ const transactionsReducer = (state = initialState, action: TransactionActionType
     switch (action.type){
         case ADD_TRANSACTION:
             const transactionList = state.transactionList;
+            console.log("Existing list:", transactionList);
+            console.log("payload", action.payload);
             if (action.payload !== undefined) transactionList.push(action.payload)
             return {transactionList: [...transactionList]}
         

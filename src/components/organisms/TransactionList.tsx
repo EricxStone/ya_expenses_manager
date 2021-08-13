@@ -8,9 +8,9 @@ export interface Props{
 }
 
 const TransactionList: FunctionComponent<Props> = ({transactions}: Props) => {
-    const transactionList: JSX.Element[] = transactions.map((transaction: Transaction) => 
+    const transactionList: JSX.Element[] | JSX.Element = transactions.length > 0 ? transactions.map((transaction: Transaction) => 
         <TransactionLine key={transaction.id} transaction={transaction}></TransactionLine>
-    )
+    ) : <Text>No Transactions</Text>
     return(
         <React.Fragment>
             <List>

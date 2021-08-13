@@ -11,12 +11,13 @@
 import React, { Component } from 'react';
 import { Provider } from 'react-redux';
 import {store} from "./store/store"
-import {Category} from '_models'
+import {Category, Transaction} from '_models'
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import HomeScreen from '_scenes/home';
 import DetailScreen from '_scenes/detail';
 import InputCategoryScreen from "_scenes/inputCategory";
+import InputTransactionScreen from "_scenes/inputTransaction";
 
 declare const global: {HermesInternal: null | {}};
 
@@ -48,6 +49,7 @@ export type RootStackParamList = {
     Home: undefined;
     Detail: {category: Category};
     InputCategory: {category?: Category};
+    InputTransaction: {transaction?: Transaction};
 }
 
 const Stack = createStackNavigator();
@@ -61,6 +63,7 @@ export default class App extends React.Component {
                         <Stack.Screen name="Home" component={HomeScreen} />
                         <Stack.Screen name="Detail" component={DetailScreen} />
                         <Stack.Screen name="InputCategory" component={InputCategoryScreen} />
+                        <Stack.Screen name="InputTransaction" component={InputTransactionScreen} />
                     </Stack.Navigator>
                 </NavigationContainer>
             </Provider>
