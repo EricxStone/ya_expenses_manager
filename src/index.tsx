@@ -14,6 +14,7 @@ import {store} from "./store/store"
 import {Category, Transaction} from '_models'
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import { NativeBaseProvider } from 'native-base';
 import HomeScreen from '_scenes/home';
 import DetailScreen from '_scenes/detail';
 import InputCategoryScreen from "_scenes/inputCategory";
@@ -57,16 +58,18 @@ const Stack = createStackNavigator();
 export default class App extends React.Component {
     render() {
         return (
-            <Provider store={store}>
-                <NavigationContainer>
-                    <Stack.Navigator initialRouteName="Home" headerMode="none">
-                        <Stack.Screen name="Home" component={HomeScreen} />
-                        <Stack.Screen name="Detail" component={DetailScreen} />
-                        <Stack.Screen name="InputCategory" component={InputCategoryScreen} />
-                        <Stack.Screen name="InputTransaction" component={InputTransactionScreen} />
-                    </Stack.Navigator>
-                </NavigationContainer>
-            </Provider>
+            <NativeBaseProvider>
+                <Provider store={store}>
+                    <NavigationContainer>
+                        <Stack.Navigator initialRouteName="Home" headerMode="none">
+                            <Stack.Screen name="Home" component={HomeScreen} />
+                            <Stack.Screen name="Detail" component={DetailScreen} />
+                            <Stack.Screen name="InputCategory" component={InputCategoryScreen} />
+                            <Stack.Screen name="InputTransaction" component={InputTransactionScreen} />
+                        </Stack.Navigator>
+                    </NavigationContainer>
+                </Provider>
+            </NativeBaseProvider>
         )
     }
 }

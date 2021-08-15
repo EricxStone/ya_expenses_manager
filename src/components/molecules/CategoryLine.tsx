@@ -1,9 +1,9 @@
 import React, {FunctionComponent} from 'react'
 
-import {ListItem, Left, Right, Body, Text} from 'native-base'
-import Icon from 'react-native-vector-icons/FontAwesome5';
-import { Col, Row, Grid } from 'react-native-easy-grid'
+import {VStack, HStack, Text, Pressable, Icon, Box, Center, Heading} from 'native-base'
+import FontAwesome from 'react-native-vector-icons/FontAwesome5';
 import {Category} from '_models'
+import { Alert } from "react-native"
 
 enum CategoryType{
     Income,
@@ -24,18 +24,54 @@ export interface Props{
 }
 
 const CategoryLine: FunctionComponent<Props> = ({category, onCategoryClick, onCategoryEdit}: Props) => {
-    return (
-        <ListItem button onPress={()=>onCategoryClick(category)} onLongPress={()=>onCategoryEdit(category)}>
+    return ( // ()=>onCategoryClick(category)
+        <Pressable onPress={() => Alert.alert("hello")} w="100%">
+            <Box w="100%" h={105} borderColor="blue.600" borderWidth={1} rounded="md" _text={{color: "white",}} p={2}>
+                <HStack w="100%" h="100%">
+                    <Center h="100%" w="13%" alignContent="center" p={2}>
+                        <Icon color="darkText" as={<FontAwesome name={category.icon} />} size="sm" w="100%" />
+                    </Center>
+                    <VStack w="87%"  h="100%" size="3">
+                        <Box p={1} w="100%">
+                            <Heading size="md" bold={true}>{category.categoryName}</Heading>
+                        </Box>
+                        <HStack space={3}>
+                            <Center pl={3} pr={3} pb={1} w="30%">
+                                <Text>Spending</Text>
+                            </Center>
+                            <Center pl={3} pr={3} pb={1} w="30%">
+                                <Text>Budget</Text>
+                            </Center>
+                            <Center pl={3} pr={3} pb={1} w="30%">
+                                <Text>Remain</Text>
+                            </Center>
+                        </HStack>
+                        <HStack space={3}>
+                            <Center w="30%" pb={1}>
+                                <Text>{category.spending}</Text>
+                            </Center>
+                            <Center w="30%" pb={1}>
+                                <Text>{category.budget}</Text>
+                            </Center>
+                            <Center w="30%" pb={1}>
+                                <Text>{category.remaining}</Text>
+                            </Center>
+                        </HStack>
+                    </VStack>
+                </HStack>
+            </Box>
+        </Pressable>
+        /* <ListItem button onPress={()=>onCategoryClick(category)} onLongPress={()=>onCategoryEdit(category)}>
             <Grid>
                 <Col size={1}>
                     <Body>
-                        <Icon name={category.icon} />
+                        
                     </Body>
                 </Col>
                 <Col size={4}>
                     <Row>
                         <Left>
-                            <Text>{category.categoryName}</Text>
+                            
                         </Left>
                         <Right>
                             <Text>{category.categoryType == CategoryType.Income? "Income" : "Expense"}</Text>
@@ -45,7 +81,7 @@ const CategoryLine: FunctionComponent<Props> = ({category, onCategoryClick, onCa
                         <Grid>
                             <Col>
                                 <Row>
-                                    <Text>Spending</Text>
+                                    
                                 </Row>
                                 <Row>
                                     <Text>{category.spending}</Text>
@@ -71,7 +107,7 @@ const CategoryLine: FunctionComponent<Props> = ({category, onCategoryClick, onCa
                     </Row>
                 </Col>
             </Grid>
-        </ListItem>
+        </ListItem> */
     )
 }
 

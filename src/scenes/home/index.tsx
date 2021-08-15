@@ -9,13 +9,10 @@ import {Category} from '_models'
 import {CategoryList} from '_organisms'
 import {
     Container,
-    Header,
-    Title, 
-    Content,
-    Body,
-    View, Fab
+    VStack, HStack, Button, IconButton, Text, NativeBaseProvider, Center, Box, StatusBar,
+    Fab, useToken, View, Icon, ScrollView
 } from 'native-base'
-import Icon from 'react-native-vector-icons/FontAwesome5';
+import FontAwesome from 'react-native-vector-icons/FontAwesome5';
 import { useSelector } from 'react-redux';
 import {RootState} from '../../store/store';
 import {StackNavigationProp} from '@react-navigation/stack'
@@ -32,9 +29,11 @@ export interface Props{
 }
 
 const HomeScreen = ({navigation}: Props) => {
-    //let foodCategory: Category = new Category("nutrition", "Food", CategoryType.Expense)
-    //let transportCategory: Category = new Category("train", "Transportation", CategoryType.Expense)
-    //let salaryCategory: Category = new Category("person", "Salary", CategoryType.Income)
+    
+    const [lightText] = useToken('colors', [
+        'lightText',
+    ]);
+
     let incomeCategories: Category[] = []
     let expenseCategories: Category[] = []
 
@@ -60,6 +59,7 @@ const HomeScreen = ({navigation}: Props) => {
     console.log("Re-render");
 
     const categoryItemClick = (category: Category) => {
+        console.log(category);
         navigation.navigate("Detail", {category});
     }
 
@@ -79,27 +79,41 @@ const HomeScreen = ({navigation}: Props) => {
     }
 
     return (
-        <Container>
-            <Header>
-                <Body>
-                    <Title>Expense Manager</Title>
-                </Body>
-            </Header>
-                <Content>
-                    <CategoryList categories={incomeCategoriesState} listHeader="Total Income" onCategoryClick={categoryItemClick} onCategoryEdit={categoryItemEdit}></CategoryList>
-                    <CategoryList categories={expenseCategoriesState} listHeader="Total Expenses" onCategoryClick={categoryItemClick} onCategoryEdit={categoryItemEdit}></CategoryList>
-                </Content>
-                <View style={{ flex: 1 }}>
-                    <Fab
-                        direction="up"
-                        containerStyle={{ }}
-                        style={{ backgroundColor: '#5067FF' }}
-                        position="bottomRight"
-                        onPress={() => navigation.navigate("InputCategory", {})}>
-                        <Icon name="plus" />
-                    </Fab>
-                </View>
-        </Container>
+        <>
+            <StatusBar barStyle="light-content" />
+            <Box safeAreaTop backgroundColor="white" />
+            <Box>
+                <HStack bg='white' px={1} py={3} justifyContent='space-between' alignItems='center'>
+                    <HStack space={4} px={3} alignItems='center'>
+                        <Text color="blue.800" fontSize="xl" fontWeight='bold'>Expense Manager</Text>
+                    </HStack>
+                </HStack>
+            </Box>
+            <ScrollView
+                _contentContainerStyle={{
+                    bg: "white",
+                    w: "100%",
+                }}
+                height="100%"
+                bg="white"
+                >
+                <Center pr={5} pl={5} w="100%" bg='white'>
+                    <VStack alignItems="center" w="100%">
+                        <CategoryList categories={incomeCategoriesState} listHeader="Total Income" onCategoryClick={categoryItemClick} onCategoryEdit={categoryItemEdit}></CategoryList>
+                        <CategoryList categories={expenseCategoriesState} listHeader="Total Expenses" onCategoryClick={categoryItemClick} onCategoryEdit={categoryItemEdit}></CategoryList>
+                    </VStack>
+                </Center>
+            </ScrollView>
+            <Box position="relative" h={100} w="100%" bg="white">
+                <Fab
+                    position="absolute"
+                    size="xs"
+                    icon={<Icon color="lightText" as={<FontAwesome name="plus" />} size="xs" />}
+                    onPress={() => navigation.navigate("InputTransaction", {})}
+                    backgroundColor="blue.800"
+                />
+            </Box>
+        </>
     )
 }
 
