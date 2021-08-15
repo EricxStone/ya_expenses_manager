@@ -1,5 +1,5 @@
 import React, {FunctionComponent} from 'react'
-import {List, ListItem, Left, Right, Text, Button} from 'native-base'
+import {List, Center, VStack, HStack, Text, Button, Heading, useToken, Box} from 'native-base'
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {CategoryLine} from '_molecules'
 import {Category} from '_models'
@@ -12,20 +12,17 @@ export interface Props{
 }
 
 const CategoryList: FunctionComponent<Props> = ({categories, listHeader, onCategoryClick, onCategoryEdit}: Props) => {
-    const categoryList: JSX.Element[] = categories.map((item: Category) => {
+    const categoryList: JSX.Element[] | JSX.Element = categories.length > 0 ? categories.map((item: Category) => {
         return <CategoryLine key={item.id} category={item} onCategoryClick={onCategoryClick} onCategoryEdit={onCategoryEdit}></CategoryLine>
-    })
+    }) : <Center flex={1}><Text fontSize="lg" bold={true}>-</Text></Center>
+    const [darkText] = useToken('colors', [
+        'darkText',
+    ]);
     return(
-        <React.Fragment>
-            <List>
-                <ListItem itemHeader first>
-                    <Left>
-                        <Text>{listHeader}</Text>
-                    </Left>
-                </ListItem>
-                {categoryList}
-            </List>
-        </React.Fragment>
+        <>
+            <Heading fontSize="lg" pb={1} size="md" w="100%" m={1} color={darkText}>{listHeader}</Heading>
+            {categoryList}
+        </>
     )
 }
 
