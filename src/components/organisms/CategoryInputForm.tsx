@@ -3,12 +3,14 @@
  */
 
 import React, {FunctionComponent} from 'react'
-import { Container, Header, Content, Form, Item, Input, Label, Picker, Icon, Text } from 'native-base';
+import { Box, Select, FormControl, Input, Icon, Text, Fab, CheckIcon, VStack } from 'native-base';
 import {Category} from '_models'
+import FontAwesome from 'react-native-vector-icons/FontAwesome5';
+import {Keyboard} from "react-native";
 
 interface Props{
     category: Category;
-    onInputChange: (category: Category) => void;
+    onInputSubmit: (category: Category) => void;
 }
 
 enum CategoryType{
@@ -16,13 +18,35 @@ enum CategoryType{
     Expense
 }
 
-const CategoryInputForm: FunctionComponent<Props> = ({category, onInputChange}) => {
+const CategoryInputForm: FunctionComponent<Props> = ({category, onInputSubmit}) => {
 
-    // const newCategory = new Category("wallet", "", CategoryType.Expense)
     const [categoryState, setCategoryState] = React.useState(category);
+    const [isKeyboardVisible, setKeyboardVisible] = React.useState(false);
+    const [fabIcon, setFabIcon] = React.useState("check");
+    const isCategoryTypeReadOnly = category.categoryName != "" ? true : false;
     
     React.useEffect(() => {
         if (category !== undefined) setCategoryState(category)
+
+        const keyboardDidShowListener = Keyboard.addListener(
+            'keyboardDidShow',
+            () => {
+              setKeyboardVisible(true); // or some other action
+              setFabIcon("chevron-down")
+            }
+         );
+         const keyboardDidHideListener = Keyboard.addListener(
+            'keyboardDidHide',
+            () => {
+              setKeyboardVisible(false); // or some other action
+              setFabIcon("check")
+            }
+         );
+
+         return () => {
+            keyboardDidHideListener.remove();
+            keyboardDidShowListener.remove();
+          };
     }, [])
 
     const onTypeSelected = (e: any) => {
@@ -43,40 +67,88 @@ const CategoryInputForm: FunctionComponent<Props> = ({category, onInputChange}) 
     }
 
     const updateCategory = (category: Category) => {
-        setCategoryState(category);
-        onInputChange(category);
+        setCategoryState({
+            categoryName: category.categoryName,
+            categoryType: category.categoryType,
+            id: category.id,
+            icon: category.icon,
+            spending: category.spending,
+            remaining: category.remaining,
+            budget: category.budget
+        });
     }
 
-    // if (category !== undefined) setCategoryState(category)
+    const onSubmitPressed = () => {
+        if(!isKeyboardVisible) onInputSubmit(categoryState);
+        else Keyboard.dismiss();
+    }
+
     return(
-        <React.Fragment>
-            <Form>
-                <Item stackedLabel>
-                    <Label>Name</Label>
-                    <Input onEndEditing={onNameInput} defaultValue={categoryState.categoryName} />
-                </Item>
-                <Item stackedLabel >
-                    <Label>Type</Label>
-                    <Picker
-                        mode="dropdown"
-                        iosIcon={<Icon name="chevron-down" />}
-                        style={{ height: 50, width: "90%" }}
-                        placeholder="Type"
-                        placeholderStyle={{ height: 50, color: "#bfc6ea" }}
-                        placeholderIconColor="#007aff"
+        <>
+            <VStack space={4} w="100%">
+                <FormControl isRequired>
+                        <FormControl.Label>Name</FormControl.Label>
+                        <Input
+                            my={2}
+                            _light={{
+                                placeholderTextColor: "blueGray.400",
+                            }}
+                            _dark={{
+                                placeholderTextColor: "blueGray.50",
+                            }}
+                            defaultValue={categoryState.categoryName}
+                            onEndEditing={onNameInput}
+                            fontSize="lg"
+                        />
+                </FormControl>
+                <FormControl isRequired isDisabled={isCategoryTypeReadOnly}>
+                    <FormControl.Label>Type</FormControl.Label>
+                    <Select
                         selectedValue={categoryState.categoryType.toString()}
+                        minWidth={200}
                         onValueChange={onTypeSelected}
+                        _selectedItem={{
+                            bg: "teal.600",
+                            endIcon: <CheckIcon size={5} />,
+                        }}
+                        mt={1}
                     >
-                        <Picker.Item label="Expenses" value="1" />
-                        <Picker.Item label="Income" value="0" />
-                    </Picker>
-                </Item>
-                <Item stackedLabel>
-                    <Label>Budget</Label>
-                    <Input keyboardType="number-pad" clearButtonMode="while-editing" defaultValue={categoryState.budget.toString()} onEndEditing={onBudgetInput}  />
-                </Item>
-          </Form>
-        </React.Fragment>
+                        <Select.Item label="Expenses" value="1" />
+                        <Select.Item label="Income" value="0" />
+                    </Select>
+                    <FormControl.HelperText>You cannot change category type on edit</FormControl.HelperText>
+                    <FormControl.ErrorMessage>Type is required</FormControl.ErrorMessage>
+                </FormControl>
+                <FormControl isRequired>
+                    <FormControl.Label>{categoryState.categoryType == CategoryType.Expense ? "Budget" : "Target Income"}</FormControl.Label>
+                    <Input
+                        InputLeftElement={
+                            <Text pl={5} fontSize="lg" color="gray.500">$</Text>
+                        }
+                        keyboardType="number-pad" clearButtonMode="while-editing"
+                        my={2}
+                        _light={{
+                            placeholderTextColor: "blueGray.400",
+                        }}
+                        _dark={{
+                            placeholderTextColor: "blueGray.50",
+                        }}
+                        defaultValue={categoryState.budget.toString()}
+                        onEndEditing={onBudgetInput}
+                        fontSize="xl"
+                    />
+                </FormControl>
+            </VStack>
+            <Box position="relative" h={100} w="100%" bg="white">
+                <Fab
+                    position="absolute"
+                    size="xs"
+                    icon={<Icon color="lightText" as={<FontAwesome name={fabIcon} />} size="xs" />}
+                    onPress={onSubmitPressed}
+                    backgroundColor="blue.800"
+                />
+            </Box>
+        </>
     )
 }
 

@@ -4,28 +4,54 @@
  */
 
  import React, {FunctionComponent} from 'react'
- import { Container, Header, Content, Form, Item, Input, Label, Picker, Icon, Text, Button } from 'native-base';
+ import { Box, Select, FormControl, Input, Icon, Text, Fab, CheckIcon, VStack } from 'native-base';
  import {Transaction, Category} from '_models'
  import DateTimePickerModal from "react-native-modal-datetime-picker";
  import { useSelector } from 'react-redux';
  import {RootState} from '../../store/store';
  import {DateTime} from "luxon";
+import { Pressable, Keyboard } from 'react-native';
+import FontAwesome from 'react-native-vector-icons/FontAwesome5';
+
  
  interface Props{
      transaction: Transaction;
-     onInputChange: (transaction: Transaction) => void;
+     onInputSubmit: (transaction: Transaction) => void;
  }
  
- const TransactionInputForm: FunctionComponent<Props> = ({transaction, onInputChange}) => {
+ const TransactionInputForm: FunctionComponent<Props> = ({transaction, onInputSubmit}) => {
  
      const [transactionState, setTransactionState] = React.useState(transaction);
      const [isDatePickerVisible, setDatePickerVisibility] = React.useState(false);
+     const [isKeyboardVisible, setKeyboardVisible] = React.useState(false);
+     const [fabIcon, setFabIcon] = React.useState("check")
      
      React.useEffect(() => {
+         console.log("transaction reload");
          if (transaction !== undefined) setTransactionState(transaction)
+         const keyboardDidShowListener = Keyboard.addListener(
+            'keyboardDidShow',
+            () => {
+              setKeyboardVisible(true); // or some other action
+              setFabIcon("chevron-down")
+            }
+         );
+         const keyboardDidHideListener = Keyboard.addListener(
+            'keyboardDidHide',
+            () => {
+              setKeyboardVisible(false); // or some other action
+              setFabIcon("check")
+            }
+         );
+
+         return () => {
+            keyboardDidHideListener.remove();
+            keyboardDidShowListener.remove();
+          };
      }, [])
  
      const onCategorySelected = (e: any) => {
+        console.log("original state", transactionState);
         transactionState.categoryId = e;
         updateTransaction(transactionState);
      }
@@ -38,10 +64,9 @@
         setDatePickerVisibility(false);
       };
     
- 
-      const handleConfirm = (date: Date) => {
+      const handleDateConfirm = (date: Date) => {
         console.log("A date has been picked: ", date);
-        transaction.transactionDate = DateTime.fromJSDate(date).toMillis();
+        transactionState.transactionDate = DateTime.fromJSDate(date).toMillis();
         hideDatePicker();
         updateTransaction(transactionState);
       };
@@ -65,63 +90,123 @@
  
      const updateTransaction = (transaction: Transaction) => {
          if (transaction.categoryId == "") transaction.categoryId = categories[0].id;
-         setTransactionState(transaction);
-         onInputChange(transaction);
+         setTransactionState({
+             source: transaction.source,
+             amount: transaction.amount,
+             id: transaction.id,
+             categoryId: transaction.categoryId,
+             item: transaction.item,
+             transactionDate: transaction.transactionDate
+         });
+     }
+
+     const onSubmitPressed = () => {
+         if(!isKeyboardVisible) onInputSubmit(transactionState);
+         else Keyboard.dismiss();
      }
 
      const categories = useSelector((state: RootState) => state.categories.categoryList);
-     const categoryList: JSX.Element[] = categories.map((item: Category, index: number) => {
-        return <Picker.Item label={item.categoryName} value={item.id} key={item.id} />
+     const categoryList: JSX.Element[] = categories.map((item: Category) => {
+        return <Select.Item label={item.categoryName} value={item.id.toString()} key={item.id}  />
     })
  
-     // if (category !== undefined) setTransactionState(category)
      return(
-         <React.Fragment>
-             <Form>
-                <Item stackedLabel>
-                     <Label>Type</Label>
-                     <Picker
-                         mode="dropdown"
-                         iosIcon={<Icon name="chevron-down" />}
-                         style={{ height: 50, width: "90%" }}
-                         placeholder="Type"
-                         placeholderStyle={{ height: 50, color: "#bfc6ea" }}
-                         placeholderIconColor="#007aff"
-                         selectedValue={transactionState.categoryId.toString()}
-                         onValueChange={onCategorySelected}
-                     >
-                         {categoryList}
-                     </Picker>
-                </Item>
-                <Item stackedLabel>
-                     <Label>Date</Label>
-                     <Button transparent light onPress={showDatePicker}>
-                        <Text>{DateTime.fromMillis(transactionState.transactionDate).setLocale('hk').toFormat("yyyy-MM-dd")}</Text>
-                     </Button>
-                     <DateTimePickerModal
-                        isVisible={isDatePickerVisible}
-                        mode="date"
-                        onConfirm={handleConfirm}
-                        onCancel={hideDatePicker}
-                        date={DateTime.fromMillis(transactionState.transactionDate).toJSDate()}
+         <>
+            <VStack space={4} w="100%">
+                <FormControl isRequired>
+                    <FormControl.Label>Type</FormControl.Label>
+                    <Select
+                        selectedValue={transactionState.categoryId}
+                        minWidth={200}
+                        onValueChange={onCategorySelected}
+                        _selectedItem={{
+                            bg: "teal.600",
+                            endIcon: <CheckIcon size={5} />,
+                        }}
+                        mt={1}
+                    >
+                        {categoryList}
+                    </Select>
+                    <FormControl.ErrorMessage>Type is required</FormControl.ErrorMessage>
+                </FormControl>
+                <FormControl isRequired>
+                    <FormControl.Label>Date</FormControl.Label>
+                    <Pressable onPress={showDatePicker}>
+                        <Text fontSize="2xl" bold>{DateTime.fromMillis(transactionState.transactionDate).setLocale('hk').toFormat("yyyy-MM-dd")}</Text>
+                    </Pressable>
+                    <DateTimePickerModal
+                            isVisible={isDatePickerVisible}
+                            mode="date"
+                            onConfirm={handleDateConfirm}
+                            onCancel={hideDatePicker}
+                            date={DateTime.fromMillis(transactionState.transactionDate).toJSDate()}
+                        />
+                    <FormControl.HelperText>
+                        Press date to edit
+                    </FormControl.HelperText>
+                    <FormControl.ErrorMessage>Date cannot be future date</FormControl.ErrorMessage>
+                </FormControl>
+                <FormControl isRequired>
+                    <FormControl.Label>Item</FormControl.Label>
+                    <Input
+                        my={2}
+                        _light={{
+                            placeholderTextColor: "blueGray.400",
+                        }}
+                        _dark={{
+                            placeholderTextColor: "blueGray.50",
+                        }}
+                        defaultValue={transactionState.item}
+                        onEndEditing={onItemInput}
+                        fontSize="lg"
                     />
-                </Item>
-                <Item stackedLabel>
-                    <Label>Item</Label>
-                    <Input onEndEditing={onItemInput} defaultValue={transactionState.item} />
-                </Item>
-                <Item stackedLabel>
-                    <Label>Notes</Label>
-                    <Input onEndEditing={onSourceInput} defaultValue={transactionState.source} />
-                </Item>
-                <Item stackedLabel>
-                     <Label>Amount</Label>
-                     <Input keyboardType="number-pad" clearButtonMode="while-editing" defaultValue={transactionState.amount.toString()} onEndEditing={onAmountInput}  />
-                </Item>
-                
-                 
-           </Form>
-         </React.Fragment>
+                </FormControl>
+                <FormControl>
+                    <FormControl.Label>Notes</FormControl.Label>
+                    <Input
+                        my={2}
+                        _light={{
+                            placeholderTextColor: "blueGray.400",
+                        }}
+                        _dark={{
+                            placeholderTextColor: "blueGray.50",
+                        }}
+                        defaultValue={transactionState.source}
+                        onEndEditing={onSourceInput}
+                        fontSize="lg"
+                    />
+                </FormControl>
+                <FormControl>
+                    <FormControl.Label>Amount</FormControl.Label>
+                    <Input
+                        InputLeftElement={
+                            <Text pl={5} fontSize="lg" color="gray.500">$</Text>
+                        }
+                        my={2}
+                        _light={{
+                            placeholderTextColor: "blueGray.400",
+                        }}
+                        _dark={{
+                            placeholderTextColor: "blueGray.50",
+                        }}
+                        defaultValue={transactionState.amount.toString()}
+                        onEndEditing={onAmountInput}
+                        keyboardType="number-pad"
+                        clearButtonMode="while-editing"
+                        fontSize="xl"
+                    />
+                </FormControl>
+            </VStack>
+            <Box position="relative" h={100} w="100%" bg="white">
+                <Fab
+                    position="absolute"
+                    size="xs"
+                    icon={<Icon color="lightText" as={<FontAwesome name={fabIcon} />} size="xs" />}
+                    onPress={onSubmitPressed}
+                    backgroundColor="blue.800"
+                />
+            </Box>
+         </>
      )
  }
  

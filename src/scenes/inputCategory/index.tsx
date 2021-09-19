@@ -4,20 +4,16 @@
 
  import React from 'react';
  import {Category} from '_models'
-import {CategoryInputForm} from '_organisms'
+ import {CategoryInputForm} from '_organisms'
  import {
-     Container,
-     Header,
-     Title, 
-     Content,
-     Body,
-     Text,
-     Fab,
-     View,
-     Grid,
-     Row,
+    StatusBar,
+    Box,
+    HStack,
+    VStack,
+    Center,
+    Text,
+    ScrollView,
  } from 'native-base'
- import Icon from 'react-native-vector-icons/FontAwesome5';
  import { useDispatch, useSelector } from 'react-redux';
  import {RootState} from '../../store/store';
  import { RouteProp, NavigationProp } from '@react-navigation/native';
@@ -47,63 +43,55 @@ enum CategoryType{
  const InputCategoryScreen = ({route, navigation}: Props) => {
 
     const newCategory = route.params.category === undefined ? new Category("wallet", "", CategoryType.Expense) : route.params.category;
-    const [categoryState, setCategoryState] = React.useState(newCategory)
+    const headingName = route.params.category === undefined ? "Add a Category" : "Edit Category"
     const dispatch = useDispatch()
 
-    const onInputSubmit = () => {
+    const onInputSubmit = (category: Category) => {
+        console.log("category submit:", category);
+        console.log("Category param", route.params.category);
+        if (route.params.category === undefined && category !== undefined){
+            console.log("Add", category);
+            dispatch({type: 'ADD_CATEGORY', payload: category})
+        } else if (route.params.category !== undefined && category !== undefined) {
+            console.log("Edit", category);
+            category.remaining = category.budget - category.spending;
+            dispatch({type: 'EDIT_CATEGORY', payload: category})
+        }
         navigation.goBack();
-    }
-
-    const onInputChange = (category: Category) => {
-        console.log("Input changed", category);
-        setCategoryState(category);
-        setCategoryState((categoryState) => {
-            console.log("Updated State:", categoryState);
-            return categoryState;
-        });
     }
 
     React.useEffect(() => {
         return () => {
-            console.log("Category param", route.params.category);
-            console.log("Category state", categoryState);
-            if (route.params.category === undefined && categoryState !== undefined){
-                console.log("Add", categoryState);
-                dispatch({type: 'ADD_CATEGORY', payload: categoryState})
-            } else if (route.params.category !== undefined && categoryState !== undefined) {
-                console.log("Edit", categoryState);
-                dispatch({type: 'EDIT_CATEGORY', payload: categoryState})
-            }
+            
         }
     }, [])
     
     return (
-        <Container>
-            <Header>
-                <Body>
-                    <Title>Add a Category</Title>
-                </Body>
-            </Header>
-            <Grid>
-                <Row style={{height: "100%"}}>
-                    <Content>
-                        <CategoryInputForm onInputChange={onInputChange} category={newCategory}></CategoryInputForm>
-                    </Content>
-                </Row>
-                <Row>
-                    <View style={{ flex: 1 }}>
-                        <Fab
-                            direction="up"
-                            containerStyle={{ }}
-                            style={{ backgroundColor: '#5067FF' }}
-                            position="bottomRight"
-                            onPress={onInputSubmit}>
-                            <Icon name="check" />
-                        </Fab>
-                    </View>
-                </Row>
-            </Grid>
-        </Container>
+        <>
+            <StatusBar barStyle="light-content" />
+            <Box safeAreaTop backgroundColor="white" />
+            <Box>
+                <HStack bg='white' px={1} py={3} justifyContent='space-between' alignItems='center'>
+                    <HStack space={4} px={3} alignItems='center'>
+                        <Text color="blue.800" fontSize="xl" fontWeight='bold'>{headingName}</Text>
+                    </HStack>
+                </HStack>
+            </Box>
+            <ScrollView
+                _contentContainerStyle={{
+                    bg: "white",
+                    w: "100%",
+                }}
+                height="100%"
+                bg="white"
+            >
+                <Center pr={5} pl={5} w="100%" bg='white'>
+                    <VStack alignItems="center" w="100%">
+                        <CategoryInputForm onInputSubmit={onInputSubmit} category={newCategory}></CategoryInputForm>
+                    </VStack>
+                </Center>
+            </ScrollView>
+        </>
     )
  }
 
