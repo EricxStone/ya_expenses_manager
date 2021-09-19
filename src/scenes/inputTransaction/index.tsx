@@ -4,20 +4,16 @@
 
  import React from 'react';
  import {Transaction} from '_models'
-import {TransactionInputForm} from '_organisms'
+ import {TransactionInputForm} from '_organisms'
  import {
-     Container,
-     Header,
-     Title, 
-     Content,
-     Body,
+     StatusBar,
+     Box,
+     HStack,
+     VStack,
+     Center,
      Text,
-     Fab,
-     View,
-     Grid,
-     Row
+     ScrollView,
  } from 'native-base'
- import Icon from 'react-native-vector-icons/FontAwesome5';
  import { useDispatch, useSelector } from 'react-redux';
  import { RouteProp, NavigationProp } from '@react-navigation/native';
  import {StackNavigationProp} from '@react-navigation/stack'
@@ -38,71 +34,68 @@ export interface Props{
     navigation: InputTransactionScreenNavigationProp;
 }
 
-enum CategoryType{
-    Income,
-    Expense
-}
-
  const InputTransactionScreen = ({route, navigation}: Props) => {
 
     const newTransaction = route.params.transaction === undefined ? new Transaction("", 0, "", 0, "") : route.params.transaction;
-    const [transactionState, setTransactionState] = React.useState(newTransaction)
+    const headingName = route.params.transaction === undefined ? "Add a Transaction" : "Edit Transaction";
     const dispatch = useDispatch()
 
-    const onInputSubmit = () => {
+    const onInputSubmit = (transaction: Transaction) => {
+        console.log("transaction submit:", transaction);
+        if (route.params.transaction === undefined && transaction !== undefined){
+            console.log("Add", transaction);
+            dispatch({type: 'ADD_TRANSACTION', payload: transaction})
+            dispatch({type: 'ADD_SPENDING', payload: {
+                id: transaction.categoryId,
+                amount: transaction.amount
+            }});
+        } else if (route.params.transaction !== undefined && transaction !== undefined) {
+            console.log("Edit", transaction);
+            dispatch({type: 'EDIT_TRANSACTION', payload: transaction});
+            dispatch({type: 'REDUCE_SPENDING', payload: {
+                id: route.params.transaction.categoryId,
+                amount: transaction.amount
+            }});
+            dispatch({type: 'ADD_SPENDING', payload: {
+                id: transaction.categoryId,
+                amount: transaction.amount
+            }});
+        }
         navigation.goBack();
-    }
-
-    const onInputChange = (transaction: Transaction) => {
-        console.log("Input changed", transaction);
-        setTransactionState(transaction);
-        setTransactionState((transactionState) => {
-            console.log("Updated State:", transactionState);
-            return transactionState;
-        });
     }
 
     React.useEffect(() => {
         return () => {
-            console.log("Category param", route.params.transaction);
-            console.log("Category state", transactionState);
-            if (route.params.transaction === undefined && transactionState !== undefined){
-                console.log("Add", transactionState);
-                dispatch({type: 'ADD_TRANSACTION', payload: transactionState})
-            } else if (route.params.transaction !== undefined && transactionState !== undefined) {
-                console.log("Edit", transactionState);
-                dispatch({type: 'EDIT_TRANSACTION', payload: transactionState});
-            }
+            
         }
     }, [])
     
     return (
-        <Container>
-            <Header>
-                <Body>
-                    <Title>Add a Transaction</Title>
-                </Body>
-            </Header>
-            <Grid>
-                <Row style={{ height: "100%"}}>
-                    <Content >
-                        <TransactionInputForm onInputChange={onInputChange} transaction={newTransaction} ></TransactionInputForm>
-                    </Content>
-                </Row>
-                <Row>
-                    <View style={{ flex: 1 }}>
-                        <Fab
-                            direction="up"
-                            containerStyle={{ }}
-                            style={{ backgroundColor: '#5067FF' }}
-                            position="bottomRight"
-                            onPress={onInputSubmit}>
-                            <Icon name="check" />
-                        </Fab>
-                    </View>
-                </Row>
-            </Grid>
-        </Container>
+        <>
+            <StatusBar barStyle="light-content" />
+            <Box safeAreaTop backgroundColor="white" />
+            <Box>
+                <HStack bg='white' px={1} py={3} justifyContent='space-between' alignItems='center'>
+                    <HStack space={4} px={3} alignItems='center'>
+                        <Text color="blue.800" fontSize="xl" fontWeight='bold'>{headingName}</Text>
+                    </HStack>
+                </HStack>
+            </Box>
+            <ScrollView
+                _contentContainerStyle={{
+                    bg: "white",
+                    w: "100%",
+                }}
+                height="100%"
+                bg="white"
+            >
+                <Center pr={5} pl={5} w="100%" bg='white'>
+                    <VStack alignItems="center" w="100%">
+                        <TransactionInputForm onInputSubmit={onInputSubmit} transaction={newTransaction} ></TransactionInputForm>
+                    </VStack>
+                </Center>
+            </ScrollView>
+        </>
     )
  }
 

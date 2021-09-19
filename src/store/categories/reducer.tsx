@@ -1,5 +1,5 @@
 import {Category} from '_models' 
-import {categoriesState, CategoryActionType, ADD_CATEGORY, EDIT_CATEGORY, DELETE_CATEGORY} from './type'
+import {categoriesState, CategoryActionType, ADD_CATEGORY, EDIT_CATEGORY, DELETE_CATEGORY, ADD_SPENDING, REDUCE_SPENDING} from './type'
 
 const initialState: categoriesState = {
     categoryList: []
@@ -31,6 +31,41 @@ const categoriesReducer = (state: categoriesState = initialState, action: Catego
                 )
                 return {categoryList: removedCategories}
             } 
+            return state
+
+        case ADD_SPENDING:
+            if (action.payload !== undefined){
+                console.log("Category List:", state.categoryList);
+                let unchangedCategories: Category[] = state.categoryList.filter(
+                    (cate: Category) => cate.id != action.payload.id
+                )
+                const updateCategories: Category[] = state.categoryList.filter(
+                    (cate: Category) => cate.id == action.payload.id
+                )
+                let updateCategory = updateCategories[0];
+                if (action.payload.amount !== undefined) updateCategory.spending += action.payload.amount
+                if (updateCategory.budget > 0) updateCategory.remaining = updateCategory.budget - updateCategory.spending;
+                unchangedCategories.push(updateCategory);
+                return {categoryList: unchangedCategories}
+            }
+            return state
+
+        case REDUCE_SPENDING:
+            if (action.payload !== undefined){
+                console.log("Category List:", state.categoryList);
+                let unchangedCategories: Category[] = state.categoryList.filter(
+                    (cate: Category) => cate.id != action.payload.id
+                )
+                const updateCategories: Category[] = state.categoryList.filter(
+                    (cate: Category) => cate.id == action.payload.id
+                )
+                let updateCategory = updateCategories[0];
+                if (action.payload.amount !== undefined) 
+                    updateCategory.spending = Math.max(updateCategory.spending - action.payload.amount, 0)
+                if (updateCategory.budget > 0) updateCategory.remaining = updateCategory.budget - updateCategory.spending;
+                unchangedCategories.push(updateCategory);
+                return {categoryList: unchangedCategories}
+            }
             return state
 
         default:

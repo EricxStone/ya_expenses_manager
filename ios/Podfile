@@ -8,6 +8,8 @@ target 'ya_expenses_manager' do
 
   use_react_native!(:path => config["reactNativePath"])
 
+  pod 'RNSVG', :path => '../node_modules/react-native-svg'
+
   target 'ya_expenses_managerTests' do
     inherit! :complete
     # Pods for testing

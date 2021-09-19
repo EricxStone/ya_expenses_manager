@@ -8,9 +8,8 @@ import React from 'react';
 import {Category} from '_models'
 import {CategoryList} from '_organisms'
 import {
-    Container,
-    VStack, HStack, Button, IconButton, Text, NativeBaseProvider, Center, Box, StatusBar,
-    Fab, useToken, View, Icon, ScrollView
+    VStack, HStack, Text, Center, Box, StatusBar,
+    Fab, useToken, Icon, ScrollView
 } from 'native-base'
 import FontAwesome from 'react-native-vector-icons/FontAwesome5';
 import { useSelector } from 'react-redux';
@@ -65,7 +64,7 @@ const HomeScreen = ({navigation}: Props) => {
 
     const categoryItemEdit = (category: Category) => {
         Alert.alert(
-            "Edit Category - " + category.categoryName,
+            "Edit Category - " + category.categoryName + "?",
             "",
             [
               {
