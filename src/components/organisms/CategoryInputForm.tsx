@@ -120,7 +120,7 @@ const CategoryInputForm: FunctionComponent<Props> = ({category, onInputSubmit}) 
                     <FormControl.ErrorMessage>Type is required</FormControl.ErrorMessage>
                 </FormControl>
                 <FormControl isRequired>
-                    <FormControl.Label>{categoryState.categoryType == CategoryType.Expense ? "Budget" : "Target Income"}</FormControl.Label>
+                    <FormControl.Label>{categoryState.categoryType == CategoryType.Expense ? "Monthly Budget" : "Monthly Target Income"}</FormControl.Label>
                     <Input
                         InputLeftElement={
                             <Text pl={5} fontSize="lg" color="gray.500">$</Text>

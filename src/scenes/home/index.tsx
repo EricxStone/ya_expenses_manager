@@ -98,8 +98,8 @@ const HomeScreen = ({navigation}: Props) => {
                 >
                 <Center pr={5} pl={5} w="100%" bg='white'>
                     <VStack alignItems="center" w="100%">
-                        <CategoryList categories={incomeCategoriesState} listHeader="Total Income" onCategoryClick={categoryItemClick} onCategoryEdit={categoryItemEdit}></CategoryList>
-                        <CategoryList categories={expenseCategoriesState} listHeader="Total Expenses" onCategoryClick={categoryItemClick} onCategoryEdit={categoryItemEdit}></CategoryList>
+                        <CategoryList categories={incomeCategoriesState} listHeader="Total Income (Current Month)" onCategoryClick={categoryItemClick} onCategoryEdit={categoryItemEdit}></CategoryList>
+                        <CategoryList categories={expenseCategoriesState} listHeader="Total Expenses (Current Month)" onCategoryClick={categoryItemClick} onCategoryEdit={categoryItemEdit}></CategoryList>
                     </VStack>
                 </Center>
             </ScrollView>

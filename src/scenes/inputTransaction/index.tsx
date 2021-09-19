@@ -39,27 +39,17 @@ export interface Props{
     const newTransaction = route.params.transaction === undefined ? new Transaction("", 0, "", 0, "") : route.params.transaction;
     const headingName = route.params.transaction === undefined ? "Add a Transaction" : "Edit Transaction";
     const dispatch = useDispatch()
+    // const originalCategoryId: string = newTransaction.categoryId;
+    // const originalAmount: number = newTransaction.amount;
 
     const onInputSubmit = (transaction: Transaction) => {
         console.log("transaction submit:", transaction);
         if (route.params.transaction === undefined && transaction !== undefined){
             console.log("Add", transaction);
             dispatch({type: 'ADD_TRANSACTION', payload: transaction})
-            dispatch({type: 'ADD_SPENDING', payload: {
-                id: transaction.categoryId,
-                amount: transaction.amount
-            }});
         } else if (route.params.transaction !== undefined && transaction !== undefined) {
             console.log("Edit", transaction);
             dispatch({type: 'EDIT_TRANSACTION', payload: transaction});
-            dispatch({type: 'REDUCE_SPENDING', payload: {
-                id: route.params.transaction.categoryId,
-                amount: transaction.amount
-            }});
-            dispatch({type: 'ADD_SPENDING', payload: {
-                id: transaction.categoryId,
-                amount: transaction.amount
-            }});
         }
         navigation.goBack();
     }

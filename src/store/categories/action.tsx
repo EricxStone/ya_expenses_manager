@@ -22,22 +22,22 @@ export const deleteCategory = (deleteCategoryId: string): CategoryActionType => 
     }
 }
 
-export const addSpending = (categoryId: string, amount: number): CategoryActionType => {
-    return {
-        type: ADD_SPENDING,
-        payload: {
-            id: categoryId,
-            amount
-        }
-    }
-}
+// export const addSpending = (categoryId: string, amount: number): CategoryActionType => {
+//     return {
+//         type: ADD_SPENDING,
+//         payload: {
+//             id: categoryId,
+//             amount
+//         }
+//     }
+// }
 
-export const reduceSpending = (categoryId: string, amount: number): CategoryActionType => {
-    return {
-        type: REDUCE_SPENDING,
-        payload: {
-            id: categoryId,
-            amount
-        }
-    }
-}
+// export const reduceSpending = (categoryId: string, amount: number): CategoryActionType => {
+//     return {
+//         type: REDUCE_SPENDING,
+//         payload: {
+//             id: categoryId,
+//             amount
+//         }
+//     }
+// }
