@@ -58,6 +58,10 @@ enum CategoryType{
         if (transactions.length > 0){
             setDisplayTransactionState(transactions);
         } 
+
+        return () => {
+            setDisplayTransactionState([])
+        }
     }, [transactionList])
 
     const transactionItemEdit = (transaction: Transaction) => {
