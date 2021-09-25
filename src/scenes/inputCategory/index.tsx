@@ -42,8 +42,10 @@ enum CategoryType{
 
  const InputCategoryScreen = ({route, navigation}: Props) => {
 
-    const newCategory = route.params.category === undefined ? new Category("wallet", "", CategoryType.Expense) : route.params.category;
+    console.log(route.params.category)
+    const newCategory = route.params.category === undefined ? new Category("wallet", "", CategoryType.Expense) : Object.assign({}, route.params.category);
     const headingName = route.params.category === undefined ? "Add a Category" : "Edit Category"
+    const isEditMode = route.params.category === undefined ? false : true;
     const dispatch = useDispatch()
 
     const onInputSubmit = (category: Category) => {
@@ -87,7 +89,7 @@ enum CategoryType{
             >
                 <Center pr={5} pl={5} w="100%" bg='white'>
                     <VStack alignItems="center" w="100%">
-                        <CategoryInputForm onInputSubmit={onInputSubmit} category={newCategory}></CategoryInputForm>
+                        <CategoryInputForm onInputSubmit={onInputSubmit} category={newCategory} isEditMode={isEditMode}></CategoryInputForm>
                     </VStack>
                 </Center>
             </ScrollView>

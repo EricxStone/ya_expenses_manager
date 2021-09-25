@@ -40,7 +40,7 @@ export interface Props{
 
  const InputTransactionScreen = ({route, navigation}: Props) => {
 
-    const newTransaction = route.params.transaction === undefined ? new Transaction("", 0, "", 0, "") : route.params.transaction;
+    const newTransaction = route.params.transaction === undefined ? new Transaction("", 0, "", 0, "") : Object.assign({}, route.params.transaction);
     const headingName = route.params.transaction === undefined ? "Add a Transaction" : "Edit Transaction";
     const dispatch = useDispatch();
 
