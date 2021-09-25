@@ -24,7 +24,17 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome5';
      const [transactionState, setTransactionState] = React.useState(transaction);
      const [isDatePickerVisible, setDatePickerVisibility] = React.useState(false);
      const [isKeyboardVisible, setKeyboardVisible] = React.useState(false);
-     const [fabIcon, setFabIcon] = React.useState("check")
+     const [fabIcon, setFabIcon] = React.useState("check");
+     const [isTypeSelectInvalid, setTypeSelectInvalid] = React.useState(false);
+     const [isDatePickedInvalid, setDatePickedInvalid] = React.useState(false);
+     const [isItemInvalid, setItemInputInvalid] = React.useState(false);
+     const [isAmountInvalid, setAmountInputInvalid] = React.useState(false);
+    
+    //  retrieve categroy list from state
+     const categories = useSelector((state: RootState) => state.categories.categoryList);
+     const categoryList: JSX.Element[] = categories.map((item: Category) => {
+        return <Select.Item label={item.categoryName} value={item.id.toString()} key={item.id}  />
+    })
      
      React.useEffect(() => {
          console.log("transaction reload");
@@ -49,9 +59,11 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome5';
             keyboardDidShowListener.remove();
           };
      }, [])
- 
+     
+    //  Input event handler
      const onCategorySelected = (e: any) => {
         console.log("original state", transactionState);
+        setTypeSelectInvalid(false);
         transactionState.categoryId = e;
         updateTransaction(transactionState);
      }
@@ -66,14 +78,21 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome5';
     
       const handleDateConfirm = (date: Date) => {
         console.log("A date has been picked: ", date);
-        transactionState.transactionDate = DateTime.fromJSDate(date).toMillis();
+        const selectedDate: DateTime = DateTime.fromJSDate(date);
         hideDatePicker();
+        setDatePickedInvalid(isInvalidDate(selectedDate.toMillis()));
+        transactionState.transactionDate = selectedDate.toMillis();
         updateTransaction(transactionState);
       };
 
      const onItemInput = (e: any) => {
-         transactionState.item = e.nativeEvent.text;
-         updateTransaction(transactionState);
+        if (e.nativeEvent.text == ""){
+            setItemInputInvalid(true);
+        } else{
+            setItemInputInvalid(false);
+        }
+        transactionState.item = e.nativeEvent.text;
+        updateTransaction(transactionState);
      }
 
      const onSourceInput = (e: any) => {
@@ -83,13 +102,17 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome5';
  
      const onAmountInput = (e: any) => {
          console.log(e.nativeEvent.text);
-         const inputAmount = isNaN(parseFloat(e.nativeEvent.text)) ? 0 : parseFloat(e.nativeEvent.text);
-         transactionState.amount = inputAmount;
+         if (isNaN(parseFloat(e.nativeEvent.text)) || parseFloat(e.nativeEvent.text) <= 0){
+            setAmountInputInvalid(true);
+            transactionState.amount = 0;
+         } else{
+            setAmountInputInvalid(false);
+            transactionState.amount = parseFloat(e.nativeEvent.text);; 
+         }
          updateTransaction(transactionState);
      }
  
      const updateTransaction = (transaction: Transaction) => {
-         if (transaction.categoryId == "") transaction.categoryId = categories[0].id;
          setTransactionState({
              source: transaction.source,
              amount: transaction.amount,
@@ -100,20 +123,40 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome5';
          });
      }
 
+     //  Submit button event handler
      const onSubmitPressed = () => {
-         if(!isKeyboardVisible) onInputSubmit(transactionState);
+         if(!isKeyboardVisible) {
+            validateForm();
+         }
          else Keyboard.dismiss();
      }
 
-     const categories = useSelector((state: RootState) => state.categories.categoryList);
-     const categoryList: JSX.Element[] = categories.map((item: Category) => {
-        return <Select.Item label={item.categoryName} value={item.id.toString()} key={item.id}  />
-    })
+    //  Form validation 
+    const validateForm = () => {
+        let isFormValid = (
+            transactionState.categoryId === "" || 
+            isInvalidDate(transactionState.transactionDate) ||
+            transactionState.item === "" ||
+            isNaN(transactionState.amount) || 
+            transactionState.amount <= 0 ) ? false : true;
+        setTypeSelectInvalid((transactionState.categoryId === ""));
+        setDatePickedInvalid(isInvalidDate(transactionState.transactionDate));
+        setItemInputInvalid((transactionState.item === ""));
+        setAmountInputInvalid((isNaN(transactionState.amount)) || transactionState.amount <= 0);
+        
+        if (isFormValid)
+            onInputSubmit(transactionState);
+    }
+
+    // Date validation
+    const isInvalidDate = (inputDate: number) => {
+        return DateTime.fromMillis(inputDate) > DateTime.now();
+    }
  
      return(
          <>
             <VStack space={4} w="100%">
-                <FormControl isRequired>
+                <FormControl isRequired isInvalid={isTypeSelectInvalid}>
                     <FormControl.Label>Type</FormControl.Label>
                     <Select
                         selectedValue={transactionState.categoryId}
@@ -129,7 +172,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome5';
                     </Select>
                     <FormControl.ErrorMessage>Type is required</FormControl.ErrorMessage>
                 </FormControl>
-                <FormControl isRequired>
+                <FormControl isRequired isInvalid={isDatePickedInvalid}>
                     <FormControl.Label>Date</FormControl.Label>
                     <Pressable onPress={showDatePicker}>
                         <Text fontSize="2xl" bold>{DateTime.fromMillis(transactionState.transactionDate).setLocale('hk').toFormat("yyyy-MM-dd")}</Text>
@@ -146,7 +189,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome5';
                     </FormControl.HelperText>
                     <FormControl.ErrorMessage>Date cannot be future date</FormControl.ErrorMessage>
                 </FormControl>
-                <FormControl isRequired>
+                <FormControl isRequired isInvalid={isItemInvalid}>
                     <FormControl.Label>Item</FormControl.Label>
                     <Input
                         my={2}
@@ -160,6 +203,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome5';
                         onEndEditing={onItemInput}
                         fontSize="lg"
                     />
+                    <FormControl.ErrorMessage>Item is required</FormControl.ErrorMessage>
                 </FormControl>
                 <FormControl>
                     <FormControl.Label>Notes</FormControl.Label>
@@ -176,7 +220,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome5';
                         fontSize="lg"
                     />
                 </FormControl>
-                <FormControl>
+                <FormControl isRequired isInvalid={isAmountInvalid}>
                     <FormControl.Label>Amount</FormControl.Label>
                     <Input
                         InputLeftElement={
@@ -195,6 +239,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome5';
                         clearButtonMode="while-editing"
                         fontSize="xl"
                     />
+                    <FormControl.ErrorMessage>Amount must be &gt; 0</FormControl.ErrorMessage>
                 </FormControl>
             </VStack>
             <Box position="relative" h={100} w="100%" bg="white">

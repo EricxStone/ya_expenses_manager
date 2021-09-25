@@ -11,6 +11,7 @@ import {Keyboard} from "react-native";
 interface Props{
     category: Category;
     onInputSubmit: (category: Category) => void;
+    isEditMode: boolean;
 }
 
 enum CategoryType{
@@ -18,12 +19,15 @@ enum CategoryType{
     Expense
 }
 
-const CategoryInputForm: FunctionComponent<Props> = ({category, onInputSubmit}) => {
+const CategoryInputForm: FunctionComponent<Props> = ({category, onInputSubmit, isEditMode}) => {
 
     const [categoryState, setCategoryState] = React.useState(category);
     const [isKeyboardVisible, setKeyboardVisible] = React.useState(false);
     const [fabIcon, setFabIcon] = React.useState("check");
-    const isCategoryTypeReadOnly = category.categoryName != "" ? true : false;
+    const isCategoryTypeReadOnly = isEditMode;
+    const [isNameInvalid, setNameInputInvalid] = React.useState(false);
+    const [isTypeInvalid, setTypeSelectInvalid] = React.useState(false);
+    const [isAmountInvalid, setAmountInputInvalid] = React.useState(false);
     
     React.useEffect(() => {
         if (category !== undefined) setCategoryState(category)
@@ -50,19 +54,30 @@ const CategoryInputForm: FunctionComponent<Props> = ({category, onInputSubmit}) 
     }, [])
 
     const onTypeSelected = (e: any) => {
+        setTypeSelectInvalid(false);
         categoryState.categoryType = e == 1 ? CategoryType.Expense : CategoryType.Income;
         updateCategory(categoryState);
     }
 
     const onNameInput = (e: any) => {
+        if (e.nativeEvent.text == ""){
+            setNameInputInvalid(true);
+        } else{
+            setNameInputInvalid(false);
+        }
         categoryState.categoryName = e.nativeEvent.text;
         updateCategory(categoryState);
     }
 
     const onBudgetInput = (e: any) => {
         console.log(e.nativeEvent.text);
-        const inputBudget = isNaN(parseFloat(e.nativeEvent.text)) ? 0 : parseFloat(e.nativeEvent.text)
-        categoryState.budget = inputBudget
+        if (isNaN(parseFloat(e.nativeEvent.text)) || parseFloat(e.nativeEvent.text) < 0){
+            setAmountInputInvalid(true);
+            categoryState.budget = -1;
+        } else{
+            setAmountInputInvalid(false);
+            categoryState.budget = parseFloat(e.nativeEvent.text)
+        }
         updateCategory(categoryState);
     }
 
@@ -79,29 +94,47 @@ const CategoryInputForm: FunctionComponent<Props> = ({category, onInputSubmit}) 
     }
 
     const onSubmitPressed = () => {
-        if(!isKeyboardVisible) onInputSubmit(categoryState);
+        if(!isKeyboardVisible) validateForm();
         else Keyboard.dismiss();
+    }
+
+    //  Form validation 
+    const validateForm = () => {
+        let isFormValid = (
+            categoryState.categoryName === "" ||
+            categoryState.categoryType === undefined ||
+            isNaN(categoryState.budget) || 
+            categoryState.budget < 0
+        ) ? false : true;
+
+        setNameInputInvalid((categoryState.categoryName === ""))
+        setTypeSelectInvalid((categoryState.categoryType === undefined))
+        setAmountInputInvalid((isNaN(categoryState.budget)) || categoryState.budget < 0)
+        
+        if (isFormValid)
+            onInputSubmit(categoryState);
     }
 
     return(
         <>
             <VStack space={4} w="100%">
-                <FormControl isRequired>
-                        <FormControl.Label>Name</FormControl.Label>
-                        <Input
-                            my={2}
-                            _light={{
-                                placeholderTextColor: "blueGray.400",
-                            }}
-                            _dark={{
-                                placeholderTextColor: "blueGray.50",
-                            }}
-                            defaultValue={categoryState.categoryName}
-                            onEndEditing={onNameInput}
-                            fontSize="lg"
-                        />
+                <FormControl isRequired isInvalid={isNameInvalid}>
+                    <FormControl.Label>Name</FormControl.Label>
+                    <Input
+                        my={2}
+                        _light={{
+                            placeholderTextColor: "blueGray.400",
+                        }}
+                        _dark={{
+                            placeholderTextColor: "blueGray.50",
+                        }}
+                        defaultValue={categoryState.categoryName}
+                        onEndEditing={onNameInput}
+                        fontSize="lg"
+                    />
+                    <FormControl.ErrorMessage>Name is required</FormControl.ErrorMessage>
                 </FormControl>
-                <FormControl isRequired isDisabled={isCategoryTypeReadOnly}>
+                <FormControl isRequired isDisabled={isCategoryTypeReadOnly} isInvalid={isTypeInvalid}>
                     <FormControl.Label>Type</FormControl.Label>
                     <Select
                         selectedValue={categoryState.categoryType.toString()}
@@ -119,7 +152,7 @@ const CategoryInputForm: FunctionComponent<Props> = ({category, onInputSubmit}) 
                     <FormControl.HelperText>You cannot change category type on edit</FormControl.HelperText>
                     <FormControl.ErrorMessage>Type is required</FormControl.ErrorMessage>
                 </FormControl>
-                <FormControl isRequired>
+                <FormControl isRequired isInvalid={isAmountInvalid}>
                     <FormControl.Label>{categoryState.categoryType == CategoryType.Expense ? "Monthly Budget" : "Monthly Target Income"}</FormControl.Label>
                     <Input
                         InputLeftElement={
@@ -137,6 +170,7 @@ const CategoryInputForm: FunctionComponent<Props> = ({category, onInputSubmit}) 
                         onEndEditing={onBudgetInput}
                         fontSize="xl"
                     />
+                    <FormControl.ErrorMessage>Budget must be greater than or equal than 0</FormControl.ErrorMessage>
                 </FormControl>
             </VStack>
             <Box position="relative" h={100} w="100%" bg="white">
