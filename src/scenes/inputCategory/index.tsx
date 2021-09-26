@@ -75,7 +75,7 @@ enum CategoryType{
             const category = route.params.category;
             Alert.alert(
                 "Delete Category?",
-                "",
+                "Warning! Deleting this category will also delete all related transactions.",
                 [
                     {
                     text: "Cancel",
