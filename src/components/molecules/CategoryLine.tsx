@@ -79,10 +79,10 @@ const CategoryLine: FunctionComponent<Props> = ({category, onCategoryClick, onCa
     }
 
     return (
-        <Pressable onPress={()=>onCategoryClick(category)} onLongPress={()=>onCategoryEdit(category)} w="100%">
-            <Box w="100%" h={105} borderColor="gray.500" borderWidth={1} rounded="md" _text={{color: "white",}} p={2}>
+        <Pressable onPress={()=>onCategoryClick(category)} onLongPress={()=>onCategoryEdit(category)} w="100%" py={2}>
+            <Box w="100%" h={105} rounded="md" _text={{color: "white",}} p={2} bgColor="gray.100" shadow={5}>
                 <HStack w="100%" h="100%">
-                    <Center h="100%" w="13%" alignContent="center" p={2}>
+                    <Center h="100%" w="13%" alignContent="center" p={2} pl={4}>
                         <AnimatedCircularProgress
                             size={55}
                             width={6}
@@ -100,7 +100,7 @@ const CategoryLine: FunctionComponent<Props> = ({category, onCategoryClick, onCa
                         </AnimatedCircularProgress>
                     </Center>
                     <VStack w="87%"  h="100%" size="3">
-                        <Box pl={4} pt={1} pb={1} w="100%">
+                        <Box pl={4} py={1} w="100%">
                             <Heading size="md" bold={true}>{category.categoryName}</Heading>
                         </Box>
                         {titleDisplay}

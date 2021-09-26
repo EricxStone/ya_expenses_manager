@@ -9,19 +9,25 @@ import {Category} from '_models'
 import {CategoryList} from '_organisms'
 import {
     VStack, HStack, Text, Center, Box, StatusBar,
-    Fab, useToken, Icon, ScrollView
+    Fab, useToken, Icon, ScrollView, Button
 } from 'native-base'
 import FontAwesome from 'react-native-vector-icons/FontAwesome5';
 import { useSelector } from 'react-redux';
 import {RootState} from '../../store/store';
-import {StackNavigationProp} from '@react-navigation/stack'
-import {RootStackParamList} from '../../index'
-import {Alert} from 'react-native'
+import { CompositeNavigationProp } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { DrawerNavigationProp } from '@react-navigation/drawer';
+import {RootStackParamList, RootDrawerParamList} from '../../index'
+import {Alert, Pressable} from 'react-native'
 
-type HomeScreenNavigationProp = StackNavigationProp<
-    RootStackParamList,
-    'Home'
->;
+type HomeScreenNavigationProp = CompositeNavigationProp<
+    StackNavigationProp<
+        RootStackParamList,
+        'Home'
+    >,
+    DrawerNavigationProp<RootDrawerParamList>
+>
+
 
 export interface Props{
     navigation: HomeScreenNavigationProp;
@@ -38,14 +44,17 @@ const HomeScreen = ({navigation}: Props) => {
 
     const [incomeCategoriesState, setIncomeCategoriesState] = React.useState(incomeCategories);
     const [expenseCategoriesState, setExpenseCategoriesState] = React.useState(expenseCategories);
+    const [shouldMountFab, setShouldMountFab] = React.useState(true);
 
     const categoryList = useSelector((state: RootState) => state.categories.categoryList);
 
     React.useEffect(() => {
         console.log("Use select reload")
         const categories = [...categoryList];
-        let incomeCategories = categories.filter((item: Category) => item.categoryType == 0)
-        let expenseCategories = categories.filter((item: Category) => item.categoryType == 1)
+        let incomeCategories = categories.filter((item: Category) => item.categoryType == 0);
+        let expenseCategories = categories.filter((item: Category) => item.categoryType == 1);
+        incomeCategories = incomeCategories.sort((a,b) => a.categoryName.localeCompare(b.categoryName));
+        expenseCategories = expenseCategories.sort((a,b) => a.categoryName.localeCompare(b.categoryName));
         if (incomeCategories.length > 0) setIncomeCategoriesState(incomeCategories);
         if (expenseCategories.length > 0) setExpenseCategoriesState(expenseCategories);
 
@@ -74,19 +83,31 @@ const HomeScreen = ({navigation}: Props) => {
               { text: "Edit", onPress: () => navigation.navigate("InputCategory", {category}) }
             ]
         );
-        
+    }
+
+    const onMenuPressed = () => {
+        navigation.toggleDrawer();
     }
 
     return (
         <>
             <StatusBar barStyle="light-content" />
             <Box safeAreaTop backgroundColor="white" />
-            <Box>
-                <HStack bg='white' px={1} py={3} justifyContent='space-between' alignItems='center'>
-                    <HStack space={4} px={3} alignItems='center'>
-                        <Text color="blue.800" fontSize="xl" fontWeight='bold'>Expense Manager</Text>
+            <Box bg='white' width="100%">
+                <Center my={3}>
+                    <HStack bg='gray.100' px={2} py={3} justifyContent='space-between' borderRadius={20} alignItems='center' width="88%" shadow={7}>
+                        <HStack width="25%"px={2}>
+                            <Pressable onPress={onMenuPressed}>
+                                <Center>
+                                    <Icon as={<FontAwesome name="bars" />} size="sm" />
+                                </Center>
+                            </Pressable>
+                        </HStack>
+                        <HStack space={4} px={3} alignItems='center' width="75%">
+                            <Text color="blue.800" fontSize="xl" fontWeight='bold'>Expense Manager</Text>
+                        </HStack>
                     </HStack>
-                </HStack>
+                </Center>
             </Box>
             <ScrollView
                 _contentContainerStyle={{
@@ -110,6 +131,7 @@ const HomeScreen = ({navigation}: Props) => {
                     icon={<Icon color="lightText" as={<FontAwesome name="plus" />} size="xs" />}
                     onPress={() => navigation.navigate("InputTransaction", {})}
                     backgroundColor="blue.800"
+                    renderInPortal={false}
                 />
             </Box>
         </>

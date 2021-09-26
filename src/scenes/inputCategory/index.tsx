@@ -13,12 +13,16 @@
     Center,
     Text,
     ScrollView,
+    Button,
+    Icon,
  } from 'native-base'
  import { useDispatch, useSelector } from 'react-redux';
  import {RootState} from '../../store/store';
  import { RouteProp, NavigationProp } from '@react-navigation/native';
  import {StackNavigationProp} from '@react-navigation/stack'
+ import FontAwesome from 'react-native-vector-icons/FontAwesome5';
  import {RootStackParamList} from '../../index'
+ import {Alert} from "react-native"
 
  type InputCategoryScreenRouteProp = RouteProp<
     RootStackParamList,
@@ -48,6 +52,10 @@ enum CategoryType{
     const isEditMode = route.params.category === undefined ? false : true;
     const dispatch = useDispatch()
 
+    let deleteCategoryButton: JSX.Element = (
+        <></>
+    )
+
     const onInputSubmit = (category: Category) => {
         console.log("category submit:", category);
         console.log("Category param", route.params.category);
@@ -62,6 +70,34 @@ enum CategoryType{
         navigation.goBack();
     }
 
+    const onInputDelete = () => {
+        if (route.params.category !== undefined) {
+            const category = route.params.category;
+            Alert.alert(
+                "Delete Category?",
+                "",
+                [
+                    {
+                    text: "Cancel",
+                    style: "cancel"
+                    },
+                    { text: "Delete", onPress: () => {
+                    dispatch({type: 'DELETE_TRANSACTION_BY_CAT', payload: category.id})
+                    dispatch({type: 'DELETE_CATEGORY', payload: category.id});
+                    navigation.goBack();
+                    } }
+                ]
+            );
+        }
+    }
+
+    if (route.params.category !== undefined) 
+        deleteCategoryButton = (
+            <Button bgColor="white" onPress={onInputDelete}>
+                <Icon color="darkText" as={<FontAwesome name="trash-alt" />} size="sm" />
+            </Button>
+        );
+
     React.useEffect(() => {
         return () => {
             
@@ -75,7 +111,8 @@ enum CategoryType{
             <Box>
                 <HStack bg='white' px={1} py={3} justifyContent='space-between' alignItems='center'>
                     <HStack space={4} px={3} alignItems='center'>
-                        <Text color="blue.800" fontSize="xl" fontWeight='bold'>{headingName}</Text>
+                        <Text color="blue.800" fontSize="xl" fontWeight='bold' w="85%">{headingName}</Text>
+                        {deleteCategoryButton}
                     </HStack>
                 </HStack>
             </Box>
