@@ -1,5 +1,5 @@
 import {Transaction} from '_models' 
-import {TransactionActionType, ADD_TRANSACTION, EDIT_TRANSACTION, DELETE_TRANSACTION} from './type'
+import {TransactionActionType, ADD_TRANSACTION, EDIT_TRANSACTION, DELETE_TRANSACTION, DELETE_TRANSACTION_BY_CAT} from './type'
 
 export const addTransaction = (newTransaction: Transaction): TransactionActionType => {
     return {
@@ -19,5 +19,12 @@ export const deleteTransaction = (deleteTransactionId: string): TransactionActio
     return {
         type: DELETE_TRANSACTION,
         payload: deleteTransactionId
+    }
+}
+
+export const deleteTransactionByCategory = (deleteCategoryId: string): TransactionActionType => {
+    return {
+        type: DELETE_TRANSACTION_BY_CAT,
+        payload: deleteCategoryId
     }
 }

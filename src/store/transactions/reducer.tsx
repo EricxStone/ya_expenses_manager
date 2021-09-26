@@ -1,5 +1,5 @@
 import {Transaction} from '_models' 
-import {transactionState, TransactionActionType, ADD_TRANSACTION, EDIT_TRANSACTION, DELETE_TRANSACTION} from './type'
+import {transactionState, TransactionActionType, ADD_TRANSACTION, EDIT_TRANSACTION, DELETE_TRANSACTION, DELETE_TRANSACTION_BY_CAT} from './type'
 
 const initialState: transactionState = {
     transactionList: []
@@ -28,6 +28,15 @@ const transactionsReducer = (state = initialState, action: TransactionActionType
             if (action.payload !== undefined){
                 const removedTransactions: Transaction[] = state.transactionList.filter(
                     (transaction: Transaction) => transaction.id != action.payload
+                )
+                return {transactionList: removedTransactions}
+            } 
+            return state
+
+        case DELETE_TRANSACTION_BY_CAT:
+            if (action.payload !== undefined){
+                const removedTransactions: Transaction[] = state.transactionList.filter(
+                    (transaction: Transaction) => transaction.categoryId != action.payload
                 )
                 return {transactionList: removedTransactions}
             } 

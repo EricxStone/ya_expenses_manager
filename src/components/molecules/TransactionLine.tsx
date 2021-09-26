@@ -27,7 +27,7 @@ const TransactionLine: FunctionComponent<Props> = ({transaction, onTransactionEd
                             <Box pl={1} pr={3} pb={2} w="70%">
                                 <Text color="gray.400">{transaction.source}</Text>
                             </Box>
-                            <Box pl={3} pr={3} pb={2} w="30%">
+                            <Box px={3} pb={2} w="30%">
                                 <Text textAlign={[ 'right', 'center' ]} color="gray.400">{DateTime.fromMillis(transaction.transactionDate).setLocale('hk').toFormat("yyyy-MM-dd")}</Text>
                             </Box>
                         </HStack>

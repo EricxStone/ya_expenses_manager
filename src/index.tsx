@@ -14,11 +14,14 @@ import {store} from "./store/store"
 import {Category, Transaction} from '_models'
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NativeBaseProvider } from 'native-base';
 import HomeScreen from '_scenes/home';
 import DetailScreen from '_scenes/detail';
 import InputCategoryScreen from "_scenes/inputCategory";
 import InputTransactionScreen from "_scenes/inputTransaction";
+import ManageCategoryScreen from "_scenes/manageCategory";
+import { exp } from 'react-native-reanimated';
 
 declare const global: {HermesInternal: null | {}};
 
@@ -30,13 +33,13 @@ enum CategoryType{
 /***
  * Show default category if not found from storage
  */
- let foodCategory: Category = new Category("bone", "Food", CategoryType.Expense)
+//  let foodCategory: Category = new Category("bone", "Food", CategoryType.Expense)
 // let transportCategory: Category = new Category("person", "Transportation", CategoryType.Expense)
 // let salaryCategory: Category = new Category("person", "Salary", CategoryType.Income)
-store.dispatch({
-    type: 'ADD_CATEGORY', 
-    payload: foodCategory
-})
+// store.dispatch({
+//     type: 'ADD_CATEGORY', 
+//     payload: foodCategory
+// })
 // store.dispatch({
 //     type: 'ADD_CATEGORY', 
 //     payload: transportCategory
@@ -51,9 +54,36 @@ export type RootStackParamList = {
     Detail: {category: Category};
     InputCategory: {category?: Category};
     InputTransaction: {transaction?: Transaction};
+    ManageCategory: undefined;
 }
 
-const Stack = createStackNavigator();
+export type RootDrawerParamList = {
+
+}
+
+const MainStack = createStackNavigator();
+const ManageCategoryStack = createStackNavigator();
+const Drawer = createDrawerNavigator();
+
+function MainStackScreen() {
+    return (
+        <MainStack.Navigator initialRouteName="Home" headerMode="none">
+            <MainStack.Screen name="Home" component={HomeScreen} />
+            <MainStack.Screen name="Detail" component={DetailScreen} />
+            <MainStack.Screen name="InputCategory" component={InputCategoryScreen} />
+            <MainStack.Screen name="InputTransaction" component={InputTransactionScreen} />
+        </MainStack.Navigator>
+    )
+}
+
+function ManageCategoryStackScreen() {
+    return (
+        <ManageCategoryStack.Navigator initialRouteName="ManageCategory" headerMode="none">
+            <ManageCategoryStack.Screen name="ManageCategory" component={ManageCategoryScreen} />
+            <ManageCategoryStack.Screen name="InputCategory" component={InputCategoryScreen} />
+        </ManageCategoryStack.Navigator>
+    )
+}
 
 export default class App extends React.Component {
     render() {
@@ -61,12 +91,10 @@ export default class App extends React.Component {
             <NativeBaseProvider>
                 <Provider store={store}>
                     <NavigationContainer>
-                        <Stack.Navigator initialRouteName="Home" headerMode="none">
-                            <Stack.Screen name="Home" component={HomeScreen} />
-                            <Stack.Screen name="Detail" component={DetailScreen} />
-                            <Stack.Screen name="InputCategory" component={InputCategoryScreen} />
-                            <Stack.Screen name="InputTransaction" component={InputTransactionScreen} />
-                        </Stack.Navigator>
+                        <Drawer.Navigator edgeWidth={0}>
+                            <Drawer.Screen name="Home" component={MainStackScreen} />
+                            <Drawer.Screen name="Manage Category" component={ManageCategoryStackScreen} />
+                        </Drawer.Navigator>
                     </NavigationContainer>
                 </Provider>
             </NativeBaseProvider>
