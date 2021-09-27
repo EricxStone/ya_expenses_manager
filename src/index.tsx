@@ -10,7 +10,7 @@
 
 import React, { Component } from 'react';
 import { Provider } from 'react-redux';
-import {store} from "./store/store"
+import {store, persistor} from "./store/store"
 import {Category, Transaction} from '_models'
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -21,7 +21,7 @@ import DetailScreen from '_scenes/detail';
 import InputCategoryScreen from "_scenes/inputCategory";
 import InputTransactionScreen from "_scenes/inputTransaction";
 import ManageCategoryScreen from "_scenes/manageCategory";
-import { exp } from 'react-native-reanimated';
+import { PersistGate } from 'redux-persist/integration/react';
 
 declare const global: {HermesInternal: null | {}};
 
@@ -90,12 +90,14 @@ export default class App extends React.Component {
         return (
             <NativeBaseProvider>
                 <Provider store={store}>
-                    <NavigationContainer>
-                        <Drawer.Navigator edgeWidth={0}>
-                            <Drawer.Screen name="Home" component={MainStackScreen} />
-                            <Drawer.Screen name="Manage Category" component={ManageCategoryStackScreen} />
-                        </Drawer.Navigator>
-                    </NavigationContainer>
+                    <PersistGate loading={null} persistor={persistor}>
+                        <NavigationContainer>
+                            <Drawer.Navigator edgeWidth={0}>
+                                <Drawer.Screen name="Home" component={MainStackScreen} />
+                                <Drawer.Screen name="Manage Category" component={ManageCategoryStackScreen} />
+                            </Drawer.Navigator>
+                        </NavigationContainer>
+                    </PersistGate>
                 </Provider>
             </NativeBaseProvider>
         )
