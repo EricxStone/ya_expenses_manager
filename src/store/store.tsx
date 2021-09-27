@@ -1,7 +1,9 @@
-import {createStore} from "redux"
-import rootReducer from "./reducer"
+import {AnyAction, createStore} from "redux"
+import persistedRootReducer from "./reducer"
+import { persistStore } from 'redux-persist';
 
-export const store = createStore(rootReducer)
+export const store = createStore(persistedRootReducer);
+export const persistor = persistStore(store);
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
 export type RootState = ReturnType<typeof store.getState>
