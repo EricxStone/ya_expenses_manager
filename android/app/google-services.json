@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "734042630184",
+    "project_id": "familyexpensemanager-e239e",
+    "storage_bucket": "familyexpensemanager-e239e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:734042630184:android:80954d4f51c8be852a2d1d",
+        "android_client_info": {
+          "package_name": "com.ya_expenses_manager"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "734042630184-7u67dnecm1u6g1okk751mj5men5mdcli.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ya_expenses_manager",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "734042630184-mnho5fbn1n6u4m3q7vf8nu5b8nvc7muq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAykgpmsCyjyyAQCB2AIpdMMHDOt1noCzo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "734042630184-mnho5fbn1n6u4m3q7vf8nu5b8nvc7muq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

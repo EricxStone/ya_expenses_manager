@@ -28,8 +28,6 @@ build/
 .gradle
 local.properties
 *.iml
-android/
-!android/app/src/main/res/*
 
 # Visual Studio Code
 #
