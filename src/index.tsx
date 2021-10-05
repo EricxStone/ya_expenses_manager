@@ -8,7 +8,7 @@
  * @format
  */
 
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Provider } from 'react-redux';
 import {store, persistor} from "./store/store"
 import {Category, Transaction} from '_models'
@@ -24,30 +24,6 @@ import ManageCategoryScreen from "_scenes/manageCategory";
 import { PersistGate } from 'redux-persist/integration/react';
 
 declare const global: {HermesInternal: null | {}};
-
-enum CategoryType{
-    Income,
-    Expense
-}
-
-/***
- * Show default category if not found from storage
- */
-//  let foodCategory: Category = new Category("bone", "Food", CategoryType.Expense)
-// let transportCategory: Category = new Category("person", "Transportation", CategoryType.Expense)
-// let salaryCategory: Category = new Category("person", "Salary", CategoryType.Income)
-// store.dispatch({
-//     type: 'ADD_CATEGORY', 
-//     payload: foodCategory
-// })
-// store.dispatch({
-//     type: 'ADD_CATEGORY', 
-//     payload: transportCategory
-// })
-// store.dispatch({
-//     type: 'ADD_CATEGORY', 
-//     payload: salaryCategory
-// })
 
 export type RootStackParamList = {
     Home: undefined;
@@ -85,21 +61,27 @@ function ManageCategoryStackScreen() {
     )
 }
 
-export default class App extends React.Component {
-    render() {
-        return (
-            <NativeBaseProvider>
-                <Provider store={store}>
-                    <PersistGate loading={null} persistor={persistor}>
-                        <NavigationContainer>
-                            <Drawer.Navigator edgeWidth={0}>
-                                <Drawer.Screen name="Home" component={MainStackScreen} />
-                                <Drawer.Screen name="Manage Category" component={ManageCategoryStackScreen} />
-                            </Drawer.Navigator>
-                        </NavigationContainer>
-                    </PersistGate>
-                </Provider>
-            </NativeBaseProvider>
-        )
-    }
+const App = () => {
+    return (
+        <NativeBaseProvider>
+            <Provider store={store}>
+                <PersistGate loading={null} persistor={persistor}>
+                    <NavigationContainer>
+                        <Drawer.Navigator edgeWidth={0}>
+                            <Drawer.Screen name="Home" component={MainStackScreen} />
+                            <Drawer.Screen name="Manage Category" component={ManageCategoryStackScreen} />
+                        </Drawer.Navigator>
+                    </NavigationContainer>
+                </PersistGate>
+            </Provider>
+        </NativeBaseProvider>
+    )
 }
+
+export default App;
+
+// export default class App extends React.Component {
+//     render() {
+        
+//     }
+// }
