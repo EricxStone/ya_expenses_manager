@@ -1,4 +1,4 @@
-import {Category} from '_models' 
+import {Category} from 'models' 
 
 export interface categoriesState{
     categoryList: Category[]
@@ -7,8 +7,7 @@ export interface categoriesState{
 export const ADD_CATEGORY = 'ADD_CATEGORY'
 export const EDIT_CATEGORY = 'EDIT_CATEGORY'
 export const DELETE_CATEGORY = 'DELETE_CATEGORY'
-export const ADD_SPENDING = 'ADD_SPENDING'
-export const REDUCE_SPENDING = 'REDUCE_SPENDING'
+export const SYNC_CATEGORIES = 'SYNC_CATEGORIES'
 
 interface AddCategoryAction {
     type: typeof ADD_CATEGORY
@@ -25,20 +24,10 @@ interface DeleteCategoryAction {
     payload: string
 }
 
-interface AddSpendingAction {
-    type: typeof ADD_SPENDING
-    payload: {
-        id: string,
-        amount: number
-    }
+interface SyncCategoriesAction {
+    type: typeof SYNC_CATEGORIES
+    payload: Category[]
 }
 
-interface ReduceSpendingAction {
-    type: typeof REDUCE_SPENDING
-    payload: {
-        id: string,
-        amount: number
-    }
-}
 
-export type CategoryActionType = AddCategoryAction | EditCategoryAction | DeleteCategoryAction | AddSpendingAction | ReduceSpendingAction
+export type CategoryActionType = AddCategoryAction | EditCategoryAction | DeleteCategoryAction | SyncCategoriesAction

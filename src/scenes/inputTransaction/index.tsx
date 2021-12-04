@@ -3,8 +3,8 @@
  */
 
  import React from 'react';
- import {Transaction} from '_models'
- import {TransactionInputForm} from '_organisms'
+ import {Transaction} from 'models'
+ import {TransactionInputForm} from 'components/organisms'
  import {
      StatusBar,
      Box,

@@ -3,8 +3,9 @@ import {List, Center, VStack, HStack, Text, Button, Heading, useToken, Box} from
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { useSelector } from 'react-redux';
 import {RootState} from '../../store/store';
-import {CategoryLine} from '_molecules'
-import {Category, Transaction} from '_models'
+import {CategoryLine} from 'components/molecules'
+import {CategoryItemType} from 'components/molecules/CategoryLine'
+import {Category, Transaction} from 'models'
 import { DateTime } from 'luxon';
 
 export interface Props{
@@ -30,10 +31,18 @@ const CategoryList: FunctionComponent<Props> = ({categories, listHeader, onCateg
     }
 
 
-    const categoryList: JSX.Element[] | JSX.Element = categories.length > 0 ? categories.map((item: Category) => {
+    const categoryList: JSX.Element[] | JSX.Element = categories.length > 0 ? categories.map((item: Category, idx: number) => {
         item.spending = calculateSpending(item.id);
         if (item.budget > 0) item.remaining = item.budget - item.spending;
-        return <CategoryLine key={item.id} category={item} onCategoryClick={onCategoryClick} onCategoryEdit={onCategoryEdit}></CategoryLine>
+        if (idx == 0 && categories.length > 1){
+            return <CategoryLine key={item.id} category={item} onCategoryClick={onCategoryClick} onCategoryEdit={onCategoryEdit} itemType={CategoryItemType.First}></CategoryLine>
+        } else if (categories.length == 1){
+            return <CategoryLine key={item.id} category={item} onCategoryClick={onCategoryClick} onCategoryEdit={onCategoryEdit} itemType={CategoryItemType.Single}></CategoryLine>
+        } else if (idx + 1 == categories.length){
+            return <CategoryLine key={item.id} category={item} onCategoryClick={onCategoryClick} onCategoryEdit={onCategoryEdit} itemType={CategoryItemType.Last}></CategoryLine>
+        } else{
+            return <CategoryLine key={item.id} category={item} onCategoryClick={onCategoryClick} onCategoryEdit={onCategoryEdit} itemType={CategoryItemType.Middle}></CategoryLine>
+        }
     }) : <Center flex={1}><Text fontSize="lg" bold={true}>-</Text></Center>
     const [darkText] = useToken('colors', [
         'darkText',

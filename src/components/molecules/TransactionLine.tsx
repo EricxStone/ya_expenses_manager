@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from 'react'
-import {Transaction} from '_models'
+import {Transaction} from 'models'
 import { DateTime } from 'luxon'
 
 import {Pressable, Text, Box, HStack, VStack, Center} from 'native-base'

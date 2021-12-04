@@ -5,8 +5,8 @@
  */
 
  import React from 'react';
- import {Transaction} from '_models'
- import {TransactionList} from '_organisms'
+ import {Transaction} from 'models'
+ import {TransactionList} from 'components/organisms'
  import {
     VStack, HStack, Text, Center, Box, StatusBar,
     Fab, Icon, ScrollView

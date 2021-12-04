@@ -4,7 +4,7 @@
 
 import React, {FunctionComponent} from 'react'
 import { Box, Select, FormControl, Input, Icon, Text, Fab, CheckIcon, VStack } from 'native-base';
-import {Category} from '_models'
+import {Category} from 'models'
 import FontAwesome from 'react-native-vector-icons/FontAwesome5';
 import {Keyboard} from "react-native";
 

@@ -1,6 +1,6 @@
 import React from 'react';
-import {Category} from '_models'
-import {ManageCateogry} from '_organisms'
+import {Category} from 'models'
+import {ManageCateogry} from 'components/organisms'
 import {
     VStack, HStack, Text, Center, Box, StatusBar,
     Fab, useToken, Icon, ScrollView, Pressable
@@ -17,7 +17,7 @@ import {Alert} from 'react-native'
 type ManageCategoryScreenNavigationProp = CompositeNavigationProp<
     StackNavigationProp<
         RootStackParamList,
-        'Home'
+        'ManageCategory'
     >,
     DrawerNavigationProp<RootDrawerParamList>
 >
@@ -36,7 +36,6 @@ const ManageCategoryScreen = ({navigation}: Props) => {
     const categoryList = useSelector((state: RootState) => state.categories.categoryList);
     let displayCategories: Category[] = [];
     const [displayCategoryState, setDisplayCategoryState] = React.useState(displayCategories);
-    const [shouldMountFab, setShouldMountFab] = React.useState(true);
 
     React.useEffect(() => {
         let categories: Category[] = [...categoryList];
@@ -50,11 +49,9 @@ const ManageCategoryScreen = ({navigation}: Props) => {
         if (categories.length > 0){
             setDisplayCategoryState(categories);
         }
-        setShouldMountFab(true);
 
         return () => {
             setDisplayCategoryState([])
-            setShouldMountFab(false);
         }
     }, [categoryList])
 

@@ -1,4 +1,4 @@
-import {Transaction} from "_models"
+import {Transaction} from "models"
 
 export interface transactionState{
     transactionList: Transaction[]

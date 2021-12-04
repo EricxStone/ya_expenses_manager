@@ -21,7 +21,8 @@
             "_viewModels": "./src/viewModels",
             "_views": "./src/views",
             "_models": "./src/models",
-            "_store": "./src/store"
+            "_store": "./src/store",
+            "_hooks": "./src/hooks"
             }
         }
         ]

@@ -3,8 +3,8 @@
  */
 
  import React from 'react';
- import {Category} from '_models'
- import {CategoryInputForm} from '_organisms'
+ import {Category} from 'models'
+ import {CategoryInputForm} from 'components/organisms'
  import {
     StatusBar,
     Box,
@@ -21,8 +21,10 @@
  import { RouteProp, NavigationProp } from '@react-navigation/native';
  import {StackNavigationProp} from '@react-navigation/stack'
  import FontAwesome from 'react-native-vector-icons/FontAwesome5';
- import {RootStackParamList} from '../../index'
- import {Alert} from "react-native"
+ import {RootStackParamList} from '../../index';
+ import {Alert} from "react-native";
+ import useCategory from "hooks/useCategory";
+import { editCategory } from 'store/categories/action';
 
  type InputCategoryScreenRouteProp = RouteProp<
     RootStackParamList,
@@ -45,12 +47,11 @@ enum CategoryType{
 }
 
  const InputCategoryScreen = ({route, navigation}: Props) => {
-
     console.log(route.params.category)
     const newCategory = route.params.category === undefined ? new Category("wallet", "", CategoryType.Expense) : Object.assign({}, route.params.category);
     const headingName = route.params.category === undefined ? "Add a Category" : "Edit Category"
     const isEditMode = route.params.category === undefined ? false : true;
-    const dispatch = useDispatch()
+    const {addNewCategory, editCategory, removeCategory} = useCategory();
 
     let deleteCategoryButton: JSX.Element = (
         <></>
@@ -61,11 +62,11 @@ enum CategoryType{
         console.log("Category param", route.params.category);
         if (route.params.category === undefined && category !== undefined){
             console.log("Add", category);
-            dispatch({type: 'ADD_CATEGORY', payload: category})
+            addNewCategory(category);
         } else if (route.params.category !== undefined && category !== undefined) {
             console.log("Edit", category);
             category.remaining = category.budget - category.spending;
-            dispatch({type: 'EDIT_CATEGORY', payload: category})
+            editCategory(route.params.category, category);
         }
         navigation.goBack();
     }
@@ -82,8 +83,7 @@ enum CategoryType{
                     style: "cancel"
                     },
                     { text: "Delete", onPress: () => {
-                    dispatch({type: 'DELETE_TRANSACTION_BY_CAT', payload: category.id})
-                    dispatch({type: 'DELETE_CATEGORY', payload: category.id});
+                    removeCategory(category);
                     navigation.goBack();
                     } }
                 ]

@@ -5,10 +5,10 @@
 
  import React, {FunctionComponent} from 'react'
  import { Box, Select, FormControl, Input, Icon, Text, Fab, CheckIcon, VStack } from 'native-base';
- import {Transaction, Category} from '_models'
+ import {Transaction, Category} from 'models'
  import DateTimePickerModal from "react-native-modal-datetime-picker";
  import { useSelector } from 'react-redux';
- import {RootState} from '../../store/store';
+ import {RootState} from 'store/store';
  import {DateTime} from "luxon";
 import { Pressable, Keyboard } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome5';

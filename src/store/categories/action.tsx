@@ -1,5 +1,5 @@
-import {Category} from '_models' 
-import {CategoryActionType, ADD_CATEGORY, EDIT_CATEGORY, DELETE_CATEGORY, ADD_SPENDING, REDUCE_SPENDING} from './type'
+import {Category} from 'models' 
+import {CategoryActionType, ADD_CATEGORY, EDIT_CATEGORY, DELETE_CATEGORY, SYNC_CATEGORIES} from './type'
 
 export const addCategory = (newCategory: Category): CategoryActionType => {
     return {
@@ -22,22 +22,9 @@ export const deleteCategory = (deleteCategoryId: string): CategoryActionType => 
     }
 }
 
-// export const addSpending = (categoryId: string, amount: number): CategoryActionType => {
-//     return {
-//         type: ADD_SPENDING,
-//         payload: {
-//             id: categoryId,
-//             amount
-//         }
-//     }
-// }
-
-// export const reduceSpending = (categoryId: string, amount: number): CategoryActionType => {
-//     return {
-//         type: REDUCE_SPENDING,
-//         payload: {
-//             id: categoryId,
-//             amount
-//         }
-//     }
-// }
+export const syncCategories = (categories: Category[]): CategoryActionType => {
+    return {
+        type: SYNC_CATEGORIES,
+        payload: categories
+    }
+}

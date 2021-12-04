@@ -1,7 +1,7 @@
 import React, {FunctionComponent} from 'react'
 import {Text, Center} from 'native-base'
-import {TransactionLine} from '_molecules'
-import {Transaction} from '_models'
+import {TransactionLine} from 'components/molecules'
+import {Transaction} from 'models'
 
 export interface Props{
     transactions: Transaction[];

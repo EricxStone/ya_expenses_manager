@@ -1,4 +1,4 @@
-import {Transaction} from '_models' 
+import {Transaction} from 'models' 
 import {transactionState, TransactionActionType, ADD_TRANSACTION, EDIT_TRANSACTION, DELETE_TRANSACTION, DELETE_TRANSACTION_BY_CAT} from './type'
 
 const initialState: transactionState = {

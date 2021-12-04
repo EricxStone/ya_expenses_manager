@@ -1,6 +1,7 @@
 import {AnyAction, createStore} from "redux"
 import persistedRootReducer from "./reducer"
 import { persistStore } from 'redux-persist';
+import useCategory from "../hooks/useCategory";
 
 export const store = createStore(persistedRootReducer);
 export const persistor = persistStore(store);

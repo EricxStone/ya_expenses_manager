@@ -11,17 +11,19 @@
 import React, { useEffect, useState } from 'react';
 import { Provider } from 'react-redux';
 import {store, persistor} from "./store/store"
-import {Category, Transaction} from '_models'
+import {Category, Transaction} from 'models'
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NativeBaseProvider } from 'native-base';
-import HomeScreen from '_scenes/home';
-import DetailScreen from '_scenes/detail';
-import InputCategoryScreen from "_scenes/inputCategory";
-import InputTransactionScreen from "_scenes/inputTransaction";
-import ManageCategoryScreen from "_scenes/manageCategory";
+import HomeScreen from 'scenes/home';
+import DetailScreen from 'scenes/detail';
+import InputCategoryScreen from "scenes/inputCategory";
+import InputTransactionScreen from "scenes/inputTransaction";
+import ManageCategoryScreen from "scenes/manageCategory";
+import SettingsScreen from 'scenes/settings';
 import { PersistGate } from 'redux-persist/integration/react';
+import auth, {FirebaseAuthTypes} from '@react-native-firebase/auth';
 
 declare const global: {HermesInternal: null | {}};
 
@@ -31,6 +33,7 @@ export type RootStackParamList = {
     InputCategory: {category?: Category};
     InputTransaction: {transaction?: Transaction};
     ManageCategory: undefined;
+    Settings: undefined;
 }
 
 export type RootDrawerParamList = {
@@ -39,6 +42,7 @@ export type RootDrawerParamList = {
 
 const MainStack = createStackNavigator();
 const ManageCategoryStack = createStackNavigator();
+const SettingsStack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 
 function MainStackScreen() {
@@ -61,7 +65,16 @@ function ManageCategoryStackScreen() {
     )
 }
 
+function SettingsStackScreen() {
+    return (
+        <SettingsStack.Navigator initialRouteName="Settings" headerMode="none">
+            <SettingsStack.Screen name="Settings" component={SettingsScreen} />
+        </SettingsStack.Navigator>
+    )
+}
+
 const App = () => {
+
     return (
         <NativeBaseProvider>
             <Provider store={store}>
@@ -70,6 +83,7 @@ const App = () => {
                         <Drawer.Navigator edgeWidth={0}>
                             <Drawer.Screen name="Home" component={MainStackScreen} />
                             <Drawer.Screen name="Manage Category" component={ManageCategoryStackScreen} />
+                            <Drawer.Screen name="Settings" component={SettingsStackScreen} />
                         </Drawer.Navigator>
                     </NavigationContainer>
                 </PersistGate>
@@ -79,9 +93,3 @@ const App = () => {
 }
 
 export default App;
-
-// export default class App extends React.Component {
-//     render() {
-        
-//     }
-// }

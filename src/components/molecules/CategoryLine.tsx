@@ -1,13 +1,21 @@
 import React, {FunctionComponent} from 'react'
 
 import {VStack, HStack, Text, Pressable, Icon, Box, Center, Heading} from 'native-base'
-import {Category} from '_models'
+import {Category} from 'models'
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
 
 export interface Props{
     category: Category;
+    itemType: CategoryItemType;
     onCategoryClick: (category: Category) => void;
     onCategoryEdit: (category: Category) => void;
+}
+
+export enum CategoryItemType {
+    First,
+    Middle,
+    Last,
+    Single
 }
 
 enum CategoryType{
@@ -15,7 +23,7 @@ enum CategoryType{
     Expense
 }
 
-const CategoryLine: FunctionComponent<Props> = ({category, onCategoryClick, onCategoryEdit}: Props) => {
+const CategoryLine: FunctionComponent<Props> = ({category, itemType, onCategoryClick, onCategoryEdit}: Props) => {
     let categoryProgress = 0;
     if (category.budget == 0 || category.spending == 0) {
         categoryProgress = 0;
@@ -23,7 +31,7 @@ const CategoryLine: FunctionComponent<Props> = ({category, onCategoryClick, onCa
         categoryProgress = Math.floor(category.spending/category.budget*100);
     }
 
-    let dataDisplay: JSX.Element, titleDisplay: JSX.Element;
+    let dataDisplay: JSX.Element, titleDisplay: JSX.Element, box: JSX.Element;
     if (category.categoryType == CategoryType.Expense){
         // expense
         titleDisplay = (
@@ -78,36 +86,64 @@ const CategoryLine: FunctionComponent<Props> = ({category, onCategoryClick, onCa
         )
     }
 
-    return (
-        <Pressable onPress={()=>onCategoryClick(category)} onLongPress={()=>onCategoryEdit(category)} w="100%" py={2}>
-            <Box w="100%" h={105} rounded="md" _text={{color: "white",}} p={2} bgColor="gray.100" shadow={5}>
-                <HStack w="100%" h="100%">
-                    <Center h="100%" w="13%" alignContent="center" p={2} pl={4}>
-                        <AnimatedCircularProgress
-                            size={55}
-                            width={6}
-                            fill={categoryProgress}
-                            rotation={0}
-                            tintColor="#2563eb"
-                            backgroundColor="#d4d4d8">
-                            {
-                                (fill) => (
-                                <Text>
-                                    { Math.min(categoryProgress, 100) + "%" }
-                                </Text>
-                                )
-                            }
-                        </AnimatedCircularProgress>
-                    </Center>
-                    <VStack w="87%"  h="100%" size="3">
-                        <Box pl={4} py={1} w="100%">
-                            <Heading size="md" bold={true}>{category.categoryName}</Heading>
-                        </Box>
-                        {titleDisplay}
-                        {dataDisplay}
-                    </VStack>
-                </HStack>
+    const boxContent: JSX.Element = (
+        <HStack w="100%" h="100%">
+            <Center h="100%" w="13%" alignContent="center" p={2} pl={4}>
+                <AnimatedCircularProgress
+                    size={55}
+                    width={6}
+                    fill={categoryProgress}
+                    rotation={0}
+                    tintColor="#2563eb"
+                    backgroundColor="#d4d4d8">
+                    {
+                        (fill) => (
+                        <Text>
+                            { Math.min(categoryProgress, 100) + "%" }
+                        </Text>
+                        )
+                    }
+                </AnimatedCircularProgress>
+            </Center>
+            <VStack w="87%"  h="100%" size="3">
+                <Box pl={4} py={1} w="100%">
+                    <Heading size="md" bold={true}>{category.categoryName}</Heading>
+                </Box>
+                {titleDisplay}
+                {dataDisplay}
+            </VStack>
+        </HStack>
+    )
+
+    if (itemType == CategoryItemType.First) {
+        box = (
+            <Box w="100%" h={105} borderTopRadius={20} _text={{color: "white",}} p={2} bgColor="gray.100" shadow={0}>
+                {boxContent}
             </Box>
+        )
+    } else if (itemType == CategoryItemType.Single) {
+        box = (
+            <Box w="100%" h={105} borderRadius={20} _text={{color: "white",}} p={2} bgColor="gray.100" shadow={0}>
+                {boxContent}
+            </Box>
+        )
+    } else if (itemType == CategoryItemType.Middle) {
+        box = (
+            <Box w="100%" h={105} _text={{color: "white",}} p={2} bgColor="gray.100" shadow={0} borderTopColor="gray.200" borderTopWidth={2}>
+                {boxContent}
+            </Box>
+        )
+    } else {
+        box = (
+            <Box w="100%" h={105} borderBottomRadius={20} _text={{color: "white",}} p={2} bgColor="gray.100" shadow={0} borderTopColor="gray.200" borderTopWidth={2}>
+                {boxContent}
+            </Box>
+        )
+    } 
+
+    return (
+        <Pressable onPress={()=>onCategoryClick(category)} onLongPress={()=>onCategoryEdit(category)} w="100%" py={0}>
+            {box}
         </Pressable>
     )
 }

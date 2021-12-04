@@ -1,7 +1,7 @@
 import React, {FunctionComponent} from 'react'
 import {List, Center, VStack, HStack, Text, Button, Heading, useToken, Box, Pressable} from 'native-base'
-import {CategoryLine} from '_molecules'
-import {Category, Transaction} from '_models'
+import {CategoryLine} from 'components/molecules'
+import {Category, Transaction} from 'models'
 
 export interface Props{
     categories: Category[];

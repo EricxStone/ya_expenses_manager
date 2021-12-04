@@ -5,8 +5,8 @@
  */
 
 import React from 'react';
-import {Category} from '_models'
-import {CategoryList} from '_organisms'
+import {Category} from 'models'
+import {CategoryList} from 'components/organisms'
 import {
     VStack, HStack, Text, Center, Box, StatusBar,
     Fab, useToken, Icon, ScrollView, Button
@@ -19,6 +19,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { DrawerNavigationProp } from '@react-navigation/drawer';
 import {RootStackParamList, RootDrawerParamList} from '../../index'
 import {Alert, Pressable} from 'react-native'
+import useCategory from "../../hooks/useCategory"
 
 type HomeScreenNavigationProp = CompositeNavigationProp<
     StackNavigationProp<
@@ -42,11 +43,16 @@ const HomeScreen = ({navigation}: Props) => {
     let incomeCategories: Category[] = []
     let expenseCategories: Category[] = []
 
+    const {getCategories} = useCategory();
+
     const [incomeCategoriesState, setIncomeCategoriesState] = React.useState(incomeCategories);
     const [expenseCategoriesState, setExpenseCategoriesState] = React.useState(expenseCategories);
-    const [shouldMountFab, setShouldMountFab] = React.useState(true);
 
     const categoryList = useSelector((state: RootState) => state.categories.categoryList);
+
+    React.useEffect(() => {
+        getCategories();
+    }, [])
 
     React.useEffect(() => {
         console.log("Use select reload")
@@ -95,7 +101,7 @@ const HomeScreen = ({navigation}: Props) => {
             <Box safeAreaTop backgroundColor="white" />
             <Box bg='white' width="100%">
                 <Center my={3}>
-                    <HStack bg='gray.100' px={2} py={3} justifyContent='space-between' borderRadius={20} alignItems='center' width="88%" shadow={7}>
+                    <HStack bg='gray.200' px={2} py={3} justifyContent='space-between' borderRadius={20} alignItems='center' width="88%" shadow={0}>
                         <HStack width="25%"px={2}>
                             <Pressable onPress={onMenuPressed}>
                                 <Center>
