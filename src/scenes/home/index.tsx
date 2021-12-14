@@ -20,6 +20,7 @@ import { DrawerNavigationProp } from '@react-navigation/drawer';
 import {RootStackParamList, RootDrawerParamList} from '../../index'
 import {Alert, Pressable} from 'react-native'
 import useCategory from "../../hooks/useCategory"
+import useTransaction from "../../hooks/useTransaction"
 
 type HomeScreenNavigationProp = CompositeNavigationProp<
     StackNavigationProp<
@@ -44,6 +45,7 @@ const HomeScreen = ({navigation}: Props) => {
     let expenseCategories: Category[] = []
 
     const {getCategories} = useCategory();
+    const {getTransactions} = useTransaction();
 
     const [incomeCategoriesState, setIncomeCategoriesState] = React.useState(incomeCategories);
     const [expenseCategoriesState, setExpenseCategoriesState] = React.useState(expenseCategories);
@@ -52,6 +54,7 @@ const HomeScreen = ({navigation}: Props) => {
 
     React.useEffect(() => {
         getCategories();
+        getTransactions();
     }, [])
 
     React.useEffect(() => {

@@ -7,7 +7,7 @@ export default function useFirestoreUserDoc(): {
     checkDocExist: (collection: string, documentId: string) => Promise<boolean>
 } {
     const getUserDocumentId = async (user: FirebaseAuthTypes.User): Promise<string> => {
-        const querySnapshot = await firestore().collection("Users").where("userID", "==", user.providerId + user.uid).get();
+        const querySnapshot = await firestore().collection("Users").where("userID", "==", user.providerId + user.email).get();
         if (querySnapshot.size == 0){
             const userDocId = await addUserCollection(user);
             return userDocId;
@@ -23,7 +23,7 @@ export default function useFirestoreUserDoc(): {
     const addUserCollection = async (user: FirebaseAuthTypes.User): Promise<string> => {
         const userCollection: string = uuidv4();
         await firestore().collection("Users").add({
-            userID: user.providerId + user.uid,
+            userID: user.providerId + user.email,
             docID: userCollection,
         });
         return userCollection;

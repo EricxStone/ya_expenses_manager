@@ -9,6 +9,11 @@ class Transaction {
     source: string;
     transactionDate: number;
     categoryId: string;
+    createDate: number;
+    updatedDate: number;
+    isDeleted: boolean;
+    owner: string;
+    
     constructor(item: string, amount: number, source: string, transactionDate: number, categoryId: string){
         this.id = uuidv4()
         this.item = item;
@@ -16,6 +21,10 @@ class Transaction {
         this.transactionDate = transactionDate == 0 ? DateTime.now().toMillis() : transactionDate;
         this.source = source;
         this.categoryId = categoryId;
+        this.createDate = 0;
+        this.updatedDate = 0;
+        this.isDeleted = false;
+        this.owner = "";
     }
 }
 

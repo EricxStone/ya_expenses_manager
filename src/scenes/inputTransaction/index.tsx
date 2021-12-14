@@ -22,6 +22,7 @@
  import {RootStackParamList} from '../../index';
  import FontAwesome from 'react-native-vector-icons/FontAwesome5';
  import {Alert} from "react-native";
+ import useTransaction from "../../hooks/useTransaction";
 
  type InputTransactionScreenRouteProp = RouteProp<
     RootStackParamList,
@@ -42,7 +43,7 @@ export interface Props{
 
     const newTransaction = route.params.transaction === undefined ? new Transaction("", 0, "", 0, "") : Object.assign({}, route.params.transaction);
     const headingName = route.params.transaction === undefined ? "Add a Transaction" : "Edit Transaction";
-    const dispatch = useDispatch();
+    const {addNewTransaction, editTransaction, removeTransaction} = useTransaction();
 
     let deleteTransactionButton: JSX.Element = (
         <></>
@@ -52,10 +53,10 @@ export interface Props{
         console.log("transaction submit:", transaction);
         if (route.params.transaction === undefined && transaction !== undefined){
             console.log("Add", transaction);
-            dispatch({type: 'ADD_TRANSACTION', payload: transaction})
+            addNewTransaction(transaction);
         } else if (route.params.transaction !== undefined && transaction !== undefined) {
             console.log("Edit", transaction);
-            dispatch({type: 'EDIT_TRANSACTION', payload: transaction});
+            editTransaction(transaction);
         }
         navigation.goBack();
     }
@@ -72,7 +73,7 @@ export interface Props{
                     style: "cancel"
                   },
                   { text: "Delete", onPress: () => {
-                    dispatch({type: 'DELETE_TRANSACTION', payload: transaction.id});
+                    removeTransaction(transaction);
                     navigation.goBack();
                   } }
                 ]

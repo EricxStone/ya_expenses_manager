@@ -2,8 +2,6 @@ import { useDispatch } from 'react-redux';
 import {Category} from 'models'
 import useGoogleSignIn from "hooks/useGoogleSignIn";
 import useFirestoreCategory from "hooks/useFirestoreCategory";
-import { useSelector } from 'react-redux';
-import {RootState} from '../store/store';
 
 export default function useCategory(): {
     addNewCategory: (category: Category) => void
@@ -12,7 +10,7 @@ export default function useCategory(): {
     getCategories: () => void
 } {
     const dispatch = useDispatch()
-    const {onGoogleSignInPressed, onGoogleSignOutPressed, userState, isSigninInProgress} = useGoogleSignIn();
+    const {userState} = useGoogleSignIn();
     const {addCategoryToFirestore, editCategoryOnFirestore, removeCategoryFromFirestore, getCategoriesFromFirestore} = useFirestoreCategory();
 
     const addNewCategory = (category: Category) => {
